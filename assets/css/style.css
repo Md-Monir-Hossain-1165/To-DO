@@ -1,0 +1,66 @@
+:root {
+    --bg: #f4f6f9;
+    --card: #fff;
+    --text: #222;
+    --muted: #6c757d;
+  }
+  
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    transition: background .25s, color .25s;
+    font-size: 14px;
+  }
+  
+  .dark-mode {
+    --bg: #121212;
+    --card: #1f1f1f;
+    --text: #e9eef5;
+    --muted: #9aa4b2;
+    background: var(--bg);
+    color: var(--text);
+  }
+  
+  .card {
+    background: var(--card);
+    border: none;
+  }
+  
+  .list-group-item {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+  
+  .task-title {
+    font-weight: 500;
+  }
+  
+  .badge-priority-high {
+    background: #ff6b6b;
+    color: white;
+  }
+  .badge-priority-medium {
+    background: #ffb020;
+    color: white;
+  }
+  .badge-priority-low {
+    background: #6bcB77;
+    color: white;
+  }
+  
+  .completed {
+    text-decoration: line-through;
+    color: #888;
+    opacity: .9;
+  }
+  
+  /* small responsive tweaks */
+  @media (max-width: 576px) {
+    .navbar-brand { font-size: 0.95rem; }
+    .card { padding: 1rem; }
+  }
+  

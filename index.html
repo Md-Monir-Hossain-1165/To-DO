@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Professional task management application with advanced productivity features">
+  <title>To-Do Manager Pro+ — Professional Task Management</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    :root {
+      --bg: #f4f6f9;
+      --card: #fff;
+      --text: #222;
+      --muted: #6c757d;
+      --primary: #4361ee;
+      --primary-light: #e6ebff;
+      --success: #4cc9a7;
+      --warning: #ff9e00;
+      --danger: #f72585;
+      --info: #4895ef;
+      --border: #e2e8f0;
+    }
+    
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      transition: all 0.3s ease;
+    }
+    
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    }
+    
+    .list-group-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.25rem;
+    }
+    
+    .task-title {
+      font-weight: 500;
+    }
+    
+    .badge-priority-high {
+      background: var(--danger);
+      color: white;
+    }
+    .badge-priority-medium {
+      background: var(--warning);
+      color: white;
+    }
+    .badge-priority-low {
+      background: var(--success);
+      color: white;
+    }
+    
+    .completed {
+      text-decoration: line-through;
+      color: var(--muted);
+      opacity: .8;
+    }
+    
+    /* Enhanced Navbar Styles */
+    .navbar-brand {
+      font-size: 1.3rem;
+      transition: opacity 0.2s;
+    }
+
+    .navbar-brand:hover {
+      opacity: 0.9;
+    }
+
+    .brand-icon {
+      transition: transform 0.2s;
+    }
+
+    .navbar-brand:hover .brand-icon {
+      transform: scale(1.1);
+    }
+
+    .btn-transparent {
+      background: transparent;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-transparent:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: scale(1.05);
+    }
+
+    .dropdown-menu {
+      border: none;
+      border-radius: 12px;
+    }
+
+    .dropdown-item {
+      border-radius: 8px;
+      margin: 2px 8px;
+      padding: 0.75rem 1rem;
+      transition: all 0.2s;
+    }
+
+    .dropdown-item:hover {
+      background: var(--primary-light);
+      transform: translateX(2px);
+    }
+
+    #userDropdown {
+      border: 1px solid transparent;
+    }
+
+    #userDropdown:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Quick stats in navbar */
+    #navTotalTasks, #navCompletedTasks, #navPendingTasks {
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    /* Notification styles */
+    #notificationBadge {
+      font-size: 0.7rem;
+      padding: 0.25rem 0.4rem;
+    }
+    
+    /* Stats cards */
+    .stat-card {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--primary);
+    }
+    
+    .stat-card:nth-child(2)::before { background: var(--success); }
+    .stat-card:nth-child(3)::before { background: var(--warning); }
+    .stat-card:nth-child(4)::before { background: var(--danger); }
+    
+    /* Progress bars */
+    .progress {
+      height: 8px;
+      border-radius: 4px;
+      background-color: var(--border);
+    }
+    
+    /* Buttons */
+    .btn-primary {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    
+    .btn-primary:hover {
+      background: #3251d4;
+      border-color: #3251d4;
+    }
+    
+    /* Custom form controls */
+    .form-control, .form-select {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+    }
+    
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.2rem rgba(67, 97, 238, 0.25);
+    }
+    
+    /* Task progress */
+    .task-progress {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .progress-text {
+      font-size: 0.85rem;
+      color: var(--muted);
+      min-width: 60px;
+    }
+    
+    /* Sidebar navigation */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 280px;
+      background: var(--card);
+      border-right: 1px solid var(--border);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      z-index: 1050;
+      padding-top: 76px;
+      overflow-y: auto;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar.show {
+      transform: translateX(0);
+    }
+    
+    .sidebar .nav-link {
+      padding: 0.75rem 1.5rem;
+      color: var(--text);
+      border-radius: 0;
+      border-left: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    
+    .sidebar .nav-link.active {
+      background: var(--primary-light);
+      border-left-color: var(--primary);
+      color: var(--primary);
+      font-weight: 600;
+    }
+    
+    .sidebar .nav-link:hover {
+      background: var(--primary-light);
+      transform: translateX(5px);
+    }
+    
+    .sidebar-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--primary-light);
+    }
+    
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1040;
+      display: none;
+      backdrop-filter: blur(2px);
+    }
+    
+    .overlay.show {
+      display: block;
+    }
+    
+    /* Main content adjustment when sidebar is open */
+    body.sidebar-open {
+      overflow: hidden;
+    }
+    
+    body.sidebar-open main {
+      transform: translateX(280px);
+      transition: transform 0.3s ease;
+    }
+    
+    /* Tip items */
+    .tip-item {
+      padding: 0.75rem;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    
+    .tip-item:hover {
+      background: var(--primary-light);
+      transform: translateY(-2px);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 85%;
+      }
+      
+      body.sidebar-open main {
+        transform: translateX(85%);
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .navbar-brand span {
+        font-size: 1.1rem;
+      }
+      
+      .container-fluid {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      
+      .card { 
+        padding: 1rem; 
+      }
+      
+      .stat-card h3 { 
+        font-size: 1.5rem; 
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAV -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow fixed-top">
+    <div class="container-fluid px-3">
+      <!-- Left Section: Logo & Toggle -->
+      <div class="d-flex align-items-center">
+        <button class="btn btn-transparent text-white p-2 me-2" id="sidebarToggle">
+          <i class="fas fa-bars fa-lg"></i>
+        </button>
+        <a class="navbar-brand d-flex align-items-center fw-bold" href="index.html">
+          <div class="brand-icon bg-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 36px; height: 36px;">
+            <i class="fas fa-list-check text-primary fa-sm"></i>
+          </div>
+          <span class="d-none d-sm-block">To-Do Manager Pro+</span>
+        </a>
+      </div>
+
+      <!-- Center Section: Quick Stats (Desktop only) -->
+      <div class="d-none d-lg-flex align-items-center mx-auto">
+        <div class="d-flex gap-3 text-white-50">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-tasks me-2"></i>
+            <small id="navTotalTasks">0 Tasks</small>
+          </div>
+          <div class="d-flex align-items-center">
+            <i class="fas fa-check-circle me-2"></i>
+            <small id="navCompletedTasks">0 Done</small>
+          </div>
+          <div class="d-flex align-items-center">
+            <i class="fas fa-clock me-2"></i>
+            <small id="navPendingTasks">0 Pending</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Section: User Menu & Notifications -->
+      <div class="d-flex align-items-center gap-3">
+        <!-- Quick Add Button -->
+        <button class="btn btn-outline-light btn-sm d-none d-md-flex" id="quickNavAdd" title="Quick Add Task">
+          <i class="fas fa-plus me-1"></i>
+          <span class="d-none d-lg-inline">Add Task</span>
+        </button>
+
+        <!-- Notifications -->
+        <div class="dropdown">
+          <button class="btn btn-transparent text-white position-relative p-2" id="notificationDropdown" data-bs-toggle="dropdown">
+            <i class="fas fa-bell fa-lg"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notificationBadge" style="display: none;">
+              0
+            </span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow" style="width: 320px;">
+            <li class="dropdown-header">Notifications</li>
+            <li><hr class="dropdown-divider"></li>
+            <li id="notificationList">
+              <div class="px-3 py-2 text-center text-muted">
+                <i class="fas fa-bell-slash fa-2x mb-2"></i>
+                <p class="small mb-0">No new notifications</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- User Profile -->
+        <div class="dropdown">
+          <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle p-2 rounded-3" id="userDropdown" data-bs-toggle="dropdown" style="transition: all 0.2s;">
+            <div class="position-relative">
+              <img id="avatarSmall" src="https://ui-avatars.com/api/?name=User&background=4361ee&color=fff" alt="avatar" class="rounded-circle me-2" width="40" height="40">
+              <span class="position-absolute bottom-0 end-0 bg-success border border-2 border-dark rounded-circle" style="width: 12px; height: 12px;"></span>
+            </div>
+            <div class="d-none d-md-block">
+              <div id="profileName" class="fw-medium">User</div>
+              <div class="small text-white-50">Online</div>
+            </div>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end shadow">
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="profile.html">
+                <i class="fas fa-user text-primary me-2"></i>
+                <div>
+                  <div class="fw-medium">My Profile</div>
+                  <small class="text-muted">View and edit profile</small>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="settings.html">
+                <i class="fas fa-cog text-success me-2"></i>
+                <div>
+                  <div class="fw-medium">Settings</div>
+                  <small class="text-muted">App preferences</small>
+                </div>
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center text-danger" href="#" id="logoutBtn">
+                <i class="fas fa-sign-out-alt me-2"></i>
+                <div>
+                  <div class="fw-medium">Logout</div>
+                  <small class="text-muted">Sign out of account</small>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h5 class="mb-0 text-primary"><i class="fas fa-compass me-2"></i>Navigation</h5>
+      <p class="small text-muted mb-0 mt-1">Manage your productivity</p>
+    </div>
+    <ul class="nav flex-column mt-3">
+      <li class="nav-item">
+        <a class="nav-link active" href="index.html">
+          <i class="fas fa-home me-2"></i>Dashboard
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="tasks.html">
+          <i class="fas fa-tasks me-2"></i>Tasks
+          <span class="badge bg-primary float-end mt-1" id="sidebarTaskCount">0</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="calendar.html">
+          <i class="fas fa-calendar-alt me-2"></i>Calendar
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="projects.html">
+          <i class="fas fa-folder me-2"></i>Projects
+          <span class="badge bg-success float-end mt-1" id="sidebarProjectCount">0</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="analytics.html">
+          <i class="fas fa-chart-line me-2"></i>Analytics
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="profile.html">
+          <i class="fas fa-user me-2"></i>Profile
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="settings.html">
+          <i class="fas fa-cog me-2"></i>Settings
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="about.html">
+          <i class="fas fa-info-circle me-2"></i>About
+        </a>
+      </li>
+    </ul>
+    
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer mt-auto p-3 border-top">
+      <div class="d-flex align-items-center">
+        <img id="sidebarAvatar" src="https://ui-avatars.com/api/?name=User&background=4361ee&color=fff" alt="avatar" class="rounded-circle me-2" width="32" height="32">
+        <div>
+          <div class="small fw-medium" id="sidebarUserName">User</div>
+          <div class="small text-muted">Pro Member</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="overlay" id="overlay"></div>
+
+  <!-- DASHBOARD -->
+  <main class="py-5" style="margin-top: 76px;">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2 id="greeting">Good Morning</h2>
+          <p id="quote" class="text-muted mb-0"></p>
+        </div>
+        <div class="d-flex align-items-center">
+          <div class="me-3">
+            <div class="task-progress">
+              <span class="progress-text" id="completionRate">0% Complete</span>
+              <div class="progress flex-grow-1" style="width: 150px;">
+                <div id="completionProgress" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+          <div class="text-end">
+            <img id="avatarLarge" src="https://ui-avatars.com/api/?name=User&background=4361ee&color=fff" alt="avatar" class="rounded-circle" width="64" height="64">
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-3">
+          <div class="card shadow-sm stat-card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h6 class="text-muted">Total Tasks</h6>
+                  <h3 id="totalTasks">0</h3>
+                </div>
+                <div class="bg-primary bg-opacity-10 p-2 rounded">
+                  <i class="fas fa-tasks text-primary"></i>
+                </div>
+              </div>
+              <p class="small text-muted mb-0">All tasks in your list</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow-sm stat-card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h6 class="text-muted">Completed</h6>
+                  <h3 id="completedTasks">0</h3>
+                </div>
+                <div class="bg-success bg-opacity-10 p-2 rounded">
+                  <i class="fas fa-check-circle text-success"></i>
+                </div>
+              </div>
+              <p class="small text-muted mb-0">Tasks marked as done</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow-sm stat-card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h6 class="text-muted">Pending</h6>
+                  <h3 id="pendingTasks">0</h3>
+                </div>
+                <div class="bg-warning bg-opacity-10 p-2 rounded">
+                  <i class="fas fa-clock text-warning"></i>
+                </div>
+              </div>
+              <p class="small text-muted mb-0">Tasks still to do</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow-sm stat-card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h6 class="text-muted">Overdue</h6>
+                  <h3 id="overdueTasks">0</h3>
+                </div>
+                <div class="bg-danger bg-opacity-10 p-2 rounded">
+                  <i class="fas fa-exclamation-circle text-danger"></i>
+                </div>
+              </div>
+              <p class="small text-muted mb-0">Tasks past due date</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress chart & Quick add -->
+      <div class="row mt-4">
+        <div class="col-lg-8">
+          <div class="card p-3 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="mb-0">Progress Overview</h5>
+              <div class="btn-group btn-group-sm">
+                <button class="btn btn-outline-secondary active" data-period="week">Week</button>
+                <button class="btn btn-outline-secondary" data-period="month">Month</button>
+                <button class="btn btn-outline-secondary" data-period="year">Year</button>
+              </div>
+            </div>
+            <canvas id="progressChart" height="120"></canvas>
+          </div>
+          
+          <!-- Upcoming deadlines -->
+          <div class="card mt-4 p-3 shadow-sm">
+            <h5>Upcoming Deadlines</h5>
+            <div id="upcomingTasks" class="mt-2">
+              <!-- Will be populated by JavaScript -->
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="card p-3 shadow-sm">
+            <h5>Quick Add Task</h5>
+            <div class="mb-2">
+              <input id="quickTaskText" class="form-control mb-2" placeholder="Task title">
+              <select id="quickCategory" class="form-select mb-2">
+                <option value="General">General</option>
+                <option value="Work">Work</option>
+                <option value="Personal">Personal</option>
+                <option value="Study">Study</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Health">Health</option>
+                <option value="Finance">Finance</option>
+              </select>
+              <div class="d-flex gap-2">
+                <input id="quickDue" type="date" class="form-control">
+                <select id="quickPriority" class="form-select" style="max-width:140px;">
+                  <option value="Low">Low</option>
+                  <option value="Medium" selected>Medium</option>
+                  <option value="High">High</option>
+                </select>
+              </div>
+            </div>
+            <button id="quickAddBtn" class="btn btn-primary w-100"><i class="fas fa-plus"></i> Add Task</button>
+          </div>
+          
+          <!-- Productivity Tips -->
+          <div class="card mt-4 p-3 shadow-sm">
+            <h5>Productivity Tips</h5>
+            <div id="productivityTips">
+              <div class="tip-item mb-3">
+                <h6 class="mb-1"><i class="fas fa-lightbulb text-warning me-2"></i>Time Blocking</h6>
+                <p class="small text-muted mb-0">Schedule specific blocks of time for different types of tasks to maintain focus.</p>
+              </div>
+              <div class="tip-item mb-3">
+                <h6 class="mb-1"><i class="fas fa-lightbulb text-warning me-2"></i>The Two-Minute Rule</h6>
+                <p class="small text-muted mb-0">If a task takes less than two minutes, do it immediately.</p>
+              </div>
+              <div class="tip-item">
+                <h6 class="mb-1"><i class="fas fa-lightbulb text-warning me-2"></i>Prioritize Ruthlessly</h6>
+                <p class="small text-muted mb-0">Focus on high-impact tasks first to maximize productivity.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent tasks -->
+      <div class="card mt-4 p-3 shadow-sm">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="mb-0">Recent Tasks</h5>
+          <a href="tasks.html" class="btn btn-sm btn-outline-primary">View All</a>
+        </div>
+        <ul id="recentTasks" class="list-group list-group-flush"></ul>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-dark text-white text-center py-4 mt-5">
+    <div class="container">
+      <p class="mb-2">© 2025 To-Do Manager Pro+ • Designed by Md Monir Hossain</p>
+      <div class="d-flex justify-content-center gap-3">
+        <a href="#" class="text-white-50"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="text-white-50"><i class="fab fa-facebook"></i></a>
+        <a href="#" class="text-white-50"><i class="fab fa-linkedin"></i></a>
+        <a href="#" class="text-white-50"><i class="fab fa-github"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Enhanced main.js with new features
+
+    // Get tasks from localStorage
+    function getTasks() {
+      return JSON.parse(localStorage.getItem('tasks') || '[]');
+    }
+    
+    function saveTasks(tasks) {
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
+    // Get profile
+    function getProfile() {
+      return JSON.parse(localStorage.getItem('profile') || '{}');
+    }
+    
+    function saveProfile(profile) {
+      localStorage.setItem('profile', JSON.stringify(profile));
+    }
+
+    // Get projects
+    function getProjects() {
+      return JSON.parse(localStorage.getItem('projects') || '[]');
+    }
+
+    // Greeting & quote
+    function setGreetingAndQuote() {
+      const hours = new Date().getHours();
+      let greet = 'Good Evening';
+      if (hours < 12) greet = 'Good Morning';
+      else if (hours < 18) greet = 'Good Afternoon';
+      
+      const profile = getProfile();
+      const name = profile.name || 'User';
+      const greetingEl = document.getElementById('greeting');
+      if (greetingEl) greetingEl.textContent = `${greet}, ${name} 👋`;
+
+      const quotes = [
+        "Success is the sum of small efforts repeated daily.",
+        "Plan your work and work your plan.",
+        "Discipline is the bridge between goals and accomplishment.",
+        "Small daily improvements are the key to staggering long-term results.",
+        "Productivity is never an accident. It is always the result of a commitment to excellence.",
+        "The key is not to prioritize what's on your schedule, but to schedule your priorities."
+      ];
+      const qEl = document.getElementById('quote');
+      if (qEl) qEl.textContent = quotes[Math.floor(Math.random()*quotes.length)];
+    }
+
+    // Profile display
+    function applyProfile() {
+      const profile = getProfile();
+      if (profile.name) {
+        const pName = document.getElementById('profileName');
+        const sidebarName = document.getElementById('sidebarUserName');
+        if (pName) pName.textContent = profile.name;
+        if (sidebarName) sidebarName.textContent = profile.name;
+      }
+      if (profile.avatar) {
+        const avatarSmall = document.getElementById('avatarSmall');
+        const avatarLarge = document.getElementById('avatarLarge');
+        const sidebarAvatar = document.getElementById('sidebarAvatar');
+        if (avatarSmall) avatarSmall.src = profile.avatar;
+        if (avatarLarge) avatarLarge.src = profile.avatar;
+        if (sidebarAvatar) sidebarAvatar.src = profile.avatar;
+      }
+    }
+
+    // Update navbar stats
+    function updateNavbarStats() {
+      const tasks = getTasks();
+      const total = tasks.length;
+      const completed = tasks.filter(t => t.completed).length;
+      const pending = total - completed;
+      
+      document.getElementById('navTotalTasks').textContent = `${total} Tasks`;
+      document.getElementById('navCompletedTasks').textContent = `${completed} Done`;
+      document.getElementById('navPendingTasks').textContent = `${pending} Pending`;
+      
+      // Update sidebar counts
+      document.getElementById('sidebarTaskCount').textContent = total;
+      document.getElementById('sidebarProjectCount').textContent = getProjects().length;
+    }
+
+    // Progress chart
+    function renderProgressChart() {
+      const tasks = getTasks();
+      const total = tasks.length;
+      const completed = tasks.filter(t => t.completed).length;
+      const pending = total - completed;
+      const overdue = tasks.filter(t => t.dueDate && !t.completed && new Date(t.dueDate) < new Date()).length;
+
+      // Stats elements
+      const setText = (id, value) => { 
+        const el = document.getElementById(id); 
+        if (el) el.textContent = value; 
+      };
+      
+      setText('totalTasks', total);
+      setText('completedTasks', completed);
+      setText('pendingTasks', pending);
+      setText('overdueTasks', overdue);
+
+      // Completion rate
+      const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
+      setText('completionRate', `${completionRate}% Complete`);
+      const progressBar = document.getElementById('completionProgress');
+      if (progressBar) {
+        progressBar.style.width = `${completionRate}%`;
+      }
+
+      const ctx = document.getElementById('progressChart');
+      if (!ctx) return;
+      
+      // Destroy existing chart if present
+      if (ctx.chart) ctx.chart.destroy();
+
+      ctx.chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Completed', 'Pending', 'Overdue'],
+          datasets: [{
+            data: [completed, pending, overdue],
+            backgroundColor: ['#4cc9a7', '#ff9e00', '#f72585'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          plugins: { 
+            legend: { 
+              position: 'bottom',
+              labels: {
+                usePointStyle: true,
+                padding: 15
+              }
+            } 
+          },
+          cutout: '70%'
+        }
+      });
+    }
+
+    // Recent tasks list
+    function renderRecentTasks() {
+      const listEl = document.getElementById('recentTasks');
+      if (!listEl) return;
+      
+      const tasks = getTasks().slice().reverse().slice(0,5);
+      listEl.innerHTML = '';
+      
+      if (tasks.length === 0) {
+        listEl.innerHTML = '<li class="list-group-item text-muted text-center py-4">No recent tasks</li>';
+        return;
+      }
+      
+      tasks.forEach(t => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item d-flex justify-content-between align-items-center';
+        
+        const dueDate = t.dueDate ? new Date(t.dueDate).toLocaleDateString() : 'No due date';
+        const isOverdue = t.dueDate && !t.completed && new Date(t.dueDate) < new Date();
+        
+        li.innerHTML = `
+          <div class="d-flex align-items-center">
+            <input type="checkbox" class="form-check-input me-3" ${t.completed ? 'checked' : ''} data-id="${t.id}">
+            <div>
+              <div class="task-title ${t.completed ? 'completed' : ''}">${escapeHtml(t.text)}</div>
+              <div class="small text-muted">${t.category || 'General'} • ${dueDate} ${isOverdue ? '<span class="badge bg-danger ms-1">Overdue</span>' : ''}</div>
+            </div>
+          </div>
+          <div class="text-end">
+            ${t.completed ? 
+              '<span class="badge bg-success">Done</span>' : 
+              (t.priority === 'High' ? 
+                '<span class="badge badge-priority-high">High</span>' : 
+                (t.priority === 'Medium' ? 
+                  '<span class="badge badge-priority-medium">Med</span>' : 
+                  '<span class="badge badge-priority-low">Low</span>'))}
+          </div>`;
+        listEl.appendChild(li);
+      });
+
+      // Add event listeners to checkboxes
+      document.querySelectorAll('#recentTasks input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+          const taskId = parseInt(this.getAttribute('data-id'));
+          const tasks = getTasks();
+          const task = tasks.find(t => t.id === taskId);
+          if (task) {
+            task.completed = this.checked;
+            saveTasks(tasks);
+            renderProgressChart();
+            renderRecentTasks();
+            updateNavbarStats();
+          }
+        });
+      });
+    }
+
+    // Upcoming deadlines
+    function renderUpcomingTasks() {
+      const container = document.getElementById('upcomingTasks');
+      if (!container) return;
+      
+      const tasks = getTasks()
+        .filter(t => t.dueDate && !t.completed)
+        .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+        .slice(0, 5);
+      
+      container.innerHTML = '';
+      
+      if (tasks.length === 0) {
+        container.innerHTML = '<p class="text-muted text-center py-3">No upcoming deadlines</p>';
+        return;
+      }
+      
+      tasks.forEach(t => {
+        const dueDate = new Date(t.dueDate);
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        
+        let dueText = '';
+        if (dueDate.toDateString() === today.toDateString()) {
+          dueText = '<span class="badge bg-danger">Today</span>';
+        } else if (dueDate.toDateString() === tomorrow.toDateString()) {
+          dueText = '<span class="badge bg-warning">Tomorrow</span>';
+        } else {
+          dueText = dueDate.toLocaleDateString();
+        }
+        
+        const div = document.createElement('div');
+        div.className = 'd-flex justify-content-between align-items-center mb-2 pb-2 border-bottom';
+        div.innerHTML = `
+          <div>
+            <div class="task-title">${escapeHtml(t.text)}</div>
+            <div class="small text-muted">${t.category || 'General'}</div>
+          </div>
+          <div class="text-end">
+            <div>${dueText}</div>
+            <div class="small">${t.priority === 'High' ? 
+              '<span class="badge badge-priority-high">High</span>' : 
+              (t.priority === 'Medium' ? 
+                '<span class="badge badge-priority-medium">Med</span>' : 
+                '<span class="badge badge-priority-low">Low</span>')}</div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // Helper to escape HTML
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    // Sidebar toggle
+    function initSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      const toggleBtn = document.getElementById('sidebarToggle');
+      
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+          sidebar.classList.add('show');
+          overlay.classList.add('show');
+          document.body.classList.add('sidebar-open');
+        });
+      }
+      
+      if (overlay) {
+        overlay.addEventListener('click', () => {
+          sidebar.classList.remove('show');
+          overlay.classList.remove('show');
+          document.body.classList.remove('sidebar-open');
+        });
+      }
+      
+      // Close sidebar when clicking on a link (mobile)
+      document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+          if (window.innerWidth < 992) {
+            sidebar.classList.remove('show');
+            overlay.classList.remove('show');
+            document.body.classList.remove('sidebar-open');
+          }
+        });
+      });
+    }
+
+    // Initialize demo data if none exists
+    function initializeDemoData() {
+      if (!localStorage.getItem('tasks')) {
+        const demoTasks = [
+          {
+            id: 1,
+            text: 'Welcome to To-Do Manager Pro+!',
+            category: 'General',
+            priority: 'Low',
+            completed: false,
+            createdAt: new Date().toISOString()
+          },
+          {
+            id: 2,
+            text: 'Explore the dashboard features',
+            category: 'General',
+            priority: 'Medium',
+            completed: false,
+            createdAt: new Date().toISOString()
+          },
+          {
+            id: 3,
+            text: 'Create your first task',
+            category: 'General',
+            priority: 'High',
+            completed: true,
+            createdAt: new Date().toISOString()
+          }
+        ];
+        saveTasks(demoTasks);
+      }
+      
+      if (!localStorage.getItem('profile')) {
+        const demoProfile = {
+          name: 'User',
+          email: 'user@example.com',
+          avatar: 'https://ui-avatars.com/api/?name=User&background=4361ee&color=fff',
+          memberSince: new Date().getFullYear().toString()
+        };
+        saveProfile(demoProfile);
+      }
+    }
+
+    // On DOM ready
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize demo data
+      initializeDemoData();
+      
+      // Initialize all components
+      setGreetingAndQuote();
+      applyProfile();
+      renderProgressChart();
+      renderRecentTasks();
+      renderUpcomingTasks();
+      updateNavbarStats();
+      initSidebar();
+
+      // Quick add on dashboard
+      const quickAddBtn = document.getElementById('quickAddBtn');
+      if (quickAddBtn) {
+        quickAddBtn.addEventListener('click', () => {
+          const text = document.getElementById('quickTaskText').value.trim();
+          const category = document.getElementById('quickCategory').value;
+          const due = document.getElementById('quickDue').value || null;
+          const priority = document.getElementById('quickPriority').value;
+          
+          if (!text) { 
+            Swal.fire({
+              icon: 'warning',
+              title: 'Task Required',
+              text: 'Please enter a task description'
+            });
+            return; 
+          }
+          
+          const tasks = getTasks();
+          tasks.push({
+            id: Date.now(),
+            text, 
+            category, 
+            dueDate: due, 
+            priority, 
+            completed: false, 
+            createdAt: new Date().toISOString()
+          });
+          
+          saveTasks(tasks);
+          
+          Swal.fire({
+            icon: 'success',
+            title: 'Task Added',
+            text: 'Your task has been added successfully',
+            timer: 1500,
+            showConfirmButton: false
+          });
+          
+          document.getElementById('quickTaskText').value = '';
+          renderProgressChart();
+          renderRecentTasks();
+          renderUpcomingTasks();
+          updateNavbarStats();
+        });
+      }
+
+      // Quick add from navbar
+      const quickNavAdd = document.getElementById('quickNavAdd');
+      if (quickNavAdd) {
+        quickNavAdd.addEventListener('click', function() {
+          document.getElementById('quickTaskText').focus();
+        });
+      }
+
+      // Logout button
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          Swal.fire({
+            title: 'Logout?',
+            text: 'Are you sure you want to logout?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Logout',
+            cancelButtonText: 'Cancel'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = 'login.html';
+            }
+          });
+        });
+      }
+    });
+  </script>
+</body>
+</html>
