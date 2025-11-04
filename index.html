@@ -1,1123 +1,1512 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Professional task management application with advanced productivity features">
-  <title>To-Do Manager Pro+ — Professional Task Management</title>
-
-  <!-- Bootstrap 5 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
-  <!-- SweetAlert2 -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-  <style>
-    :root {
-      --bg: #f4f6f9;
-      --card: #fff;
-      --text: #222;
-      --muted: #6c757d;
-      --primary: #4361ee;
-      --primary-light: #e6ebff;
-      --success: #4cc9a7;
-      --warning: #ff9e00;
-      --danger: #f72585;
-      --info: #4895ef;
-      --border: #e2e8f0;
-    }
-    
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      font-size: 14px;
-      line-height: 1.6;
-      transition: all 0.3s ease;
-    }
-    
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-    }
-    
-    .list-group-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border: none;
-      border-bottom: 1px solid var(--border);
-      padding: 1rem 1.25rem;
-    }
-    
-    .task-title {
-      font-weight: 500;
-    }
-    
-    .badge-priority-high {
-      background: var(--danger);
-      color: white;
-    }
-    .badge-priority-medium {
-      background: var(--warning);
-      color: white;
-    }
-    .badge-priority-low {
-      background: var(--success);
-      color: white;
-    }
-    
-    .completed {
-      text-decoration: line-through;
-      color: var(--muted);
-      opacity: .8;
-    }
-    
-    /* Enhanced Navbar Styles */
-    .navbar-brand {
-      font-size: 1.3rem;
-      transition: opacity 0.2s;
-    }
-
-    .navbar-brand:hover {
-      opacity: 0.9;
-    }
-
-    .brand-icon {
-      transition: transform 0.2s;
-    }
-
-    .navbar-brand:hover .brand-icon {
-      transform: scale(1.1);
-    }
-
-    .btn-transparent {
-      background: transparent;
-      border: none;
-      transition: all 0.2s;
-    }
-
-    .btn-transparent:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: scale(1.05);
-    }
-
-    .dropdown-menu {
-      border: none;
-      border-radius: 12px;
-    }
-
-    .dropdown-item {
-      border-radius: 8px;
-      margin: 2px 8px;
-      padding: 0.75rem 1rem;
-      transition: all 0.2s;
-    }
-
-    .dropdown-item:hover {
-      background: var(--primary-light);
-      transform: translateX(2px);
-    }
-
-    #userDropdown {
-      border: 1px solid transparent;
-    }
-
-    #userDropdown:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-
-    /* Quick stats in navbar */
-    #navTotalTasks, #navCompletedTasks, #navPendingTasks {
-      font-size: 0.8rem;
-      font-weight: 500;
-    }
-
-    /* Notification styles */
-    #notificationBadge {
-      font-size: 0.7rem;
-      padding: 0.25rem 0.4rem;
-    }
-    
-    /* Stats cards */
-    .stat-card {
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .stat-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 4px;
-      height: 100%;
-      background: var(--primary);
-    }
-    
-    .stat-card:nth-child(2)::before { background: var(--success); }
-    .stat-card:nth-child(3)::before { background: var(--warning); }
-    .stat-card:nth-child(4)::before { background: var(--danger); }
-    
-    /* Progress bars */
-    .progress {
-      height: 8px;
-      border-radius: 4px;
-      background-color: var(--border);
-    }
-    
-    /* Buttons */
-    .btn-primary {
-      background: var(--primary);
-      border-color: var(--primary);
-    }
-    
-    .btn-primary:hover {
-      background: #3251d4;
-      border-color: #3251d4;
-    }
-    
-    /* Custom form controls */
-    .form-control, .form-select {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.5rem 0.75rem;
-    }
-    
-    .form-control:focus, .form-select:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 0.2rem rgba(67, 97, 238, 0.25);
-    }
-    
-    /* Task progress */
-    .task-progress {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .progress-text {
-      font-size: 0.85rem;
-      color: var(--muted);
-      min-width: 60px;
-    }
-    
-    /* Sidebar navigation */
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 280px;
-      background: var(--card);
-      border-right: 1px solid var(--border);
-      transform: translateX(-100%);
-      transition: transform 0.3s ease;
-      z-index: 1050;
-      padding-top: 76px;
-      overflow-y: auto;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-    }
-    
-    .sidebar.show {
-      transform: translateX(0);
-    }
-    
-    .sidebar .nav-link {
-      padding: 0.75rem 1.5rem;
-      color: var(--text);
-      border-radius: 0;
-      border-left: 3px solid transparent;
-      transition: all 0.2s;
-    }
-    
-    .sidebar .nav-link.active {
-      background: var(--primary-light);
-      border-left-color: var(--primary);
-      color: var(--primary);
-      font-weight: 600;
-    }
-    
-    .sidebar .nav-link:hover {
-      background: var(--primary-light);
-      transform: translateX(5px);
-    }
-    
-    .sidebar-header {
-      padding: 1.5rem;
-      border-bottom: 1px solid var(--border);
-      background: var(--primary-light);
-    }
-    
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 1040;
-      display: none;
-      backdrop-filter: blur(2px);
-    }
-    
-    .overlay.show {
-      display: block;
-    }
-    
-    /* Main content adjustment when sidebar is open */
-    body.sidebar-open {
-      overflow: hidden;
-    }
-    
-    body.sidebar-open main {
-      transform: translateX(280px);
-      transition: transform 0.3s ease;
-    }
-    
-    /* Tip items */
-    .tip-item {
-      padding: 0.75rem;
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
-    
-    .tip-item:hover {
-      background: var(--primary-light);
-      transform: translateY(-2px);
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-      .sidebar {
-        width: 85%;
-      }
-      
-      body.sidebar-open main {
-        transform: translateX(85%);
-      }
-    }
-    
-    @media (max-width: 576px) {
-      .navbar-brand span {
-        font-size: 1.1rem;
-      }
-      
-      .container-fluid {
-        padding-left: 1rem;
-        padding-right: 1rem;
-      }
-      
-      .card { 
-        padding: 1rem; 
-      }
-      
-      .stat-card h3 { 
-        font-size: 1.5rem; 
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow Pro | Advanced Task Management</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-  <!-- NAV -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow fixed-top">
-    <div class="container-fluid px-3">
-      <!-- Left Section: Logo & Toggle -->
-      <div class="d-flex align-items-center">
-        <button class="btn btn-transparent text-white p-2 me-2" id="sidebarToggle">
-          <i class="fas fa-bars fa-lg"></i>
-        </button>
-        <a class="navbar-brand d-flex align-items-center fw-bold" href="index.html">
-          <div class="brand-icon bg-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 36px; height: 36px;">
-            <i class="fas fa-list-check text-primary fa-sm"></i>
-          </div>
-          <span class="d-none d-sm-block">To-Do Manager Pro+</span>
-        </a>
-      </div>
-
-      <!-- Center Section: Quick Stats (Desktop only) -->
-      <div class="d-none d-lg-flex align-items-center mx-auto">
-        <div class="d-flex gap-3 text-white-50">
-          <div class="d-flex align-items-center">
-            <i class="fas fa-tasks me-2"></i>
-            <small id="navTotalTasks">0 Tasks</small>
-          </div>
-          <div class="d-flex align-items-center">
-            <i class="fas fa-check-circle me-2"></i>
-            <small id="navCompletedTasks">0 Done</small>
-          </div>
-          <div class="d-flex align-items-center">
-            <i class="fas fa-clock me-2"></i>
-            <small id="navPendingTasks">0 Pending</small>
-          </div>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-tasks"></i>
+                TaskFlow Pro
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#pricing">Pricing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#testimonials">Testimonials</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#faq">FAQ</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <button class="btn btn-outline-light me-2">Log In</button>
+                    <button class="btn btn-primary">Sign Up Free</button>
+                </div>
+            </div>
         </div>
-      </div>
+    </nav>
 
-      <!-- Right Section: User Menu & Notifications -->
-      <div class="d-flex align-items-center gap-3">
-        <!-- Quick Add Button -->
-        <button class="btn btn-outline-light btn-sm d-none d-md-flex" id="quickNavAdd" title="Quick Add Task">
-          <i class="fas fa-plus me-1"></i>
-          <span class="d-none d-lg-inline">Add Task</span>
-        </button>
+    <!-- Hero Section -->
+    <section class="hero-section" id="dashboard">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="hero-title">Master Your Productivity</h1>
+                    <p class="hero-subtitle">TaskFlow Pro helps teams and individuals organize tasks, track progress, and achieve goals faster with advanced features and intuitive design.</p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <button class="btn btn-primary btn-lg">
+                            <i class="fas fa-rocket"></i>
+                            Get Started
+                        </button>
+                        <button class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-play-circle"></i>
+                            Watch Demo
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="task-container mt-5 mt-lg-0">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="mb-0">Today's Tasks</h3>
+                            <button class="btn btn-sm btn-outline-light" data-bs-toggle="modal" data-bs-target="#taskModal">
+                                <i class="fas fa-plus"></i>
+                                Add Task
+                            </button>
+                        </div>
+                        
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" class="form-control" id="taskSearch" placeholder="Search tasks...">
+                        </div>
+                        
+                        <div class="completed-percentage">
+                            <span id="completionText">0% completed</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" id="completionProgress" role="progressbar" style="width: 0%"></div>
+                        </div>
+                        
+                        <ul class="task-list" id="taskList">
+                            <!-- Tasks will be added here dynamically -->
+                        </ul>
+                        
+                        <div class="d-flex justify-content-between mt-3">
+                            <span id="taskCount">0 tasks</span>
+                            <button class="btn btn-sm btn-outline-light" id="clearCompleted">Clear Completed</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        <!-- Notifications -->
-        <div class="dropdown">
-          <button class="btn btn-transparent text-white position-relative p-2" id="notificationDropdown" data-bs-toggle="dropdown">
-            <i class="fas fa-bell fa-lg"></i>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notificationBadge" style="display: none;">
-              0
-            </span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end shadow" style="width: 320px;">
-            <li class="dropdown-header">Notifications</li>
-            <li><hr class="dropdown-divider"></li>
-            <li id="notificationList">
-              <div class="px-3 py-2 text-center text-muted">
-                <i class="fas fa-bell-slash fa-2x mb-2"></i>
-                <p class="small mb-0">No new notifications</p>
+    <!-- Stats Section -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="section-title">Your Productivity Stats</h2>
+            
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalTasks">0</div>
+                    <div class="stat-label">Total Tasks</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="completedTasks">0</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="pendingTasks">0</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="overdueTasks">0</div>
+                    <div class="stat-label">Overdue</div>
+                </div>
+            </div>
+            
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All Tasks</button>
+                <button class="filter-btn" data-filter="active">Active</button>
+                <button class="filter-btn" data-filter="completed">Completed</button>
+                <button class="filter-btn" data-filter="today">Today</button>
+                <button class="filter-btn" data-filter="week">This Week</button>
+            </div>
+        </div>
+    </section>
+    <!-- Productivity Insights Section -->
+<section class="insights-section py-5" id="insights">
+  <div class="container">
+      <h2 class="section-title">Productivity Insights</h2>
+      <p class="text-center text-muted mb-5">Track your progress and optimize your workflow</p>
+      
+      <div class="row g-4">
+          <!-- Task Completion Chart -->
+          <div class="col-lg-6">
+              <div class="insight-card">
+                  <div class="insight-header">
+                      <h4><i class="fas fa-chart-line me-2"></i>Task Completion Trend</h4>
+                      <div class="time-filter">
+                          <button class="filter-btn active" data-period="week">Week</button>
+                          <button class="filter-btn" data-period="month">Month</button>
+                          <button class="filter-btn" data-period="year">Year</button>
+                      </div>
+                  </div>
+                  <div class="chart-container">
+                      <canvas id="completionChart" width="400" height="250"></canvas>
+                  </div>
               </div>
-            </li>
-          </ul>
-        </div>
-
-        <!-- User Profile -->
-        <div class="dropdown">
-          <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle p-2 rounded-3" id="userDropdown" data-bs-toggle="dropdown" style="transition: all 0.2s;">
-            <div class="position-relative">
-              <img id="avatarSmall" src="https://ui-avatars.com/api/?name=User&background=4361ee&color=fff" alt="avatar" class="rounded-circle me-2" width="40" height="40">
-              <span class="position-absolute bottom-0 end-0 bg-success border border-2 border-dark rounded-circle" style="width: 12px; height: 12px;"></span>
-            </div>
-            <div class="d-none d-md-block">
-              <div id="profileName" class="fw-medium">User</div>
-              <div class="small text-white-50">Online</div>
-            </div>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end shadow">
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="profile.html">
-                <i class="fas fa-user text-primary me-2"></i>
-                <div>
-                  <div class="fw-medium">My Profile</div>
-                  <small class="text-muted">View and edit profile</small>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="settings.html">
-                <i class="fas fa-cog text-success me-2"></i>
-                <div>
-                  <div class="fw-medium">Settings</div>
-                  <small class="text-muted">App preferences</small>
-                </div>
-              </a>
-            </li>
-            <li><hr class="dropdown-divider"></li>
-            <li>
-              <a class="dropdown-item d-flex align-items-center text-danger" href="#" id="logoutBtn">
-                <i class="fas fa-sign-out-alt me-2"></i>
-                <div>
-                  <div class="fw-medium">Logout</div>
-                  <small class="text-muted">Sign out of account</small>
-                </div>
-              </a>
-            </li>
-          </ul>
-        </div>
+          </div>
+          
+          <!-- Productivity Stats -->
+          <div class="col-lg-6">
+              <div class="insight-card">
+                  <div class="insight-header">
+                      <h4><i class="fas fa-tachometer-alt me-2"></i>Productivity Metrics</h4>
+                  </div>
+                  <div class="metrics-grid">
+                      <div class="metric-item">
+                          <div class="metric-icon completed">
+                              <i class="fas fa-check-circle"></i>
+                          </div>
+                          <div class="metric-info">
+                              <div class="metric-value" id="avgCompletion">0%</div>
+                              <div class="metric-label">Avg. Completion Rate</div>
+                          </div>
+                      </div>
+                      <div class="metric-item">
+                          <div class="metric-icon pending">
+                              <i class="fas fa-clock"></i>
+                          </div>
+                          <div class="metric-info">
+                              <div class="metric-value" id="avgCompletionTime">0h</div>
+                              <div class="metric-label">Avg. Completion Time</div>
+                          </div>
+                      </div>
+                      <div class="metric-item">
+                          <div class="metric-icon productivity">
+                              <i class="fas fa-bolt"></i>
+                          </div>
+                          <div class="metric-info">
+                              <div class="metric-value" id="productivityScore">0</div>
+                              <div class="metric-label">Productivity Score</div>
+                          </div>
+                      </div>
+                      <div class="metric-item">
+                          <div class="metric-icon streak">
+                              <i class="fas fa-fire"></i>
+                          </div>
+                          <div class="metric-info">
+                              <div class="metric-value" id="currentStreak">0</div>
+                              <div class="metric-label">Current Streak</div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Priority Distribution -->
+          <div class="col-lg-6">
+              <div class="insight-card">
+                  <div class="insight-header">
+                      <h4><i class="fas fa-exclamation-circle me-2"></i>Priority Distribution</h4>
+                  </div>
+                  <div class="chart-container">
+                      <canvas id="priorityChart" width="400" height="250"></canvas>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Category Breakdown -->
+          <div class="col-lg-6">
+              <div class="insight-card">
+                  <div class="insight-header">
+                      <h4><i class="fas fa-layer-group me-2"></i>Category Breakdown</h4>
+                  </div>
+                  <div class="categories-list">
+                      <div class="category-item">
+                          <div class="category-info">
+                              <span class="category-dot work"></span>
+                              <span class="category-name">Work</span>
+                          </div>
+                          <div class="category-stats">
+                              <span class="category-count" id="workCount">0</span>
+                              <span class="category-percent" id="workPercent">0%</span>
+                          </div>
+                      </div>
+                      <div class="category-item">
+                          <div class="category-info">
+                              <span class="category-dot personal"></span>
+                              <span class="category-name">Personal</span>
+                          </div>
+                          <div class="category-stats">
+                              <span class="category-count" id="personalCount">0</span>
+                              <span class="category-percent" id="personalPercent">0%</span>
+                          </div>
+                      </div>
+                      <div class="category-item">
+                          <div class="category-info">
+                              <span class="category-dot shopping"></span>
+                              <span class="category-name">Shopping</span>
+                          </div>
+                          <div class="category-stats">
+                              <span class="category-count" id="shoppingCount">0</span>
+                              <span class="category-percent" id="shoppingPercent">0%</span>
+                          </div>
+                      </div>
+                      <div class="category-item">
+                          <div class="category-info">
+                              <span class="category-dot health"></span>
+                              <span class="category-name">Health</span>
+                          </div>
+                          <div class="category-stats">
+                              <span class="category-count" id="healthCount">0</span>
+                              <span class="category-percent" id="healthPercent">0%</span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Weekly Schedule -->
+          <div class="col-12">
+              <div class="insight-card">
+                  <div class="insight-header">
+                      <h4><i class="fas fa-calendar-alt me-2"></i>Weekly Task Schedule</h4>
+                  </div>
+                  <div class="schedule-container">
+                      <div class="schedule-grid">
+                          <div class="day-column">
+                              <div class="day-header">Mon</div>
+                              <div class="day-tasks" id="mon-tasks"></div>
+                          </div>
+                          <div class="day-column">
+                              <div class="day-header">Tue</div>
+                              <div class="day-tasks" id="tue-tasks"></div>
+                          </div>
+                          <div class="day-column">
+                              <div class="day-header">Wed</div>
+                              <div class="day-tasks" id="wed-tasks"></div>
+                          </div>
+                          <div class="day-column">
+                              <div class="day-header">Thu</div>
+                              <div class="day-tasks" id="thu-tasks"></div>
+                          </div>
+                          <div class="day-column">
+                              <div class="day-header">Fri</div>
+                              <div class="day-tasks" id="fri-tasks"></div>
+                          </div>
+                          <div class="day-column">
+                              <div class="day-header">Sat</div>
+                              <div class="day-tasks" id="sat-tasks"></div>
+                          </div>
+                          <div class="day-column">
+                              <div class="day-header">Sun</div>
+                              <div class="day-tasks" id="sun-tasks"></div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
       </div>
-    </div>
-  </nav>
-
-  <!-- SIDEBAR -->
-  <div class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <h5 class="mb-0 text-primary"><i class="fas fa-compass me-2"></i>Navigation</h5>
-      <p class="small text-muted mb-0 mt-1">Manage your productivity</p>
-    </div>
-    <ul class="nav flex-column mt-3">
-      <li class="nav-item">
-        <a class="nav-link active" href="index.html">
-          <i class="fas fa-home me-2"></i>Dashboard
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="tasks.html">
-          <i class="fas fa-tasks me-2"></i>Tasks
-          <span class="badge bg-primary float-end mt-1" id="sidebarTaskCount">0</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="calendar.html">
-          <i class="fas fa-calendar-alt me-2"></i>Calendar
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="projects.html">
-          <i class="fas fa-folder me-2"></i>Projects
-          <span class="badge bg-success float-end mt-1" id="sidebarProjectCount">0</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="analytics.html">
-          <i class="fas fa-chart-line me-2"></i>Analytics
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="profile.html">
-          <i class="fas fa-user me-2"></i>Profile
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="settings.html">
-          <i class="fas fa-cog me-2"></i>Settings
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="about.html">
-          <i class="fas fa-info-circle me-2"></i>About
-        </a>
-      </li>
-    </ul>
-    
-    <!-- Sidebar Footer -->
-    <div class="sidebar-footer mt-auto p-3 border-top">
-      <div class="d-flex align-items-center">
-        <img id="sidebarAvatar" src="https://ui-avatars.com/api/?name=User&background=4361ee&color=fff" alt="avatar" class="rounded-circle me-2" width="32" height="32">
-        <div>
-          <div class="small fw-medium" id="sidebarUserName">User</div>
-          <div class="small text-muted">Pro Member</div>
-        </div>
-      </div>
-    </div>
   </div>
+</section>
+
+   <!-- Features Section -->
+<section class="features-section" id="features">
+  <div class="container">
+      <h2 class="section-title">Advanced Features</h2>
+      
+      <!-- Feature Filter Tabs -->
+      <div class="feature-tabs text-center mb-5">
+          <div class="btn-group" role="group">
+              <button type="button" class="btn btn-outline-primary active" data-category="all">All Features</button>
+              <button type="button" class="btn btn-outline-primary" data-category="organization">Organization</button>
+              <button type="button" class="btn btn-outline-primary" data-category="productivity">Productivity</button>
+              <button type="button" class="btn btn-outline-primary" data-category="collaboration">Collaboration</button>
+          </div>
+      </div>
+
+      <div class="row g-4">
+          <!-- Project Organization -->
+          <div class="col-md-4" data-categories="organization">
+              <div class="feature-card" data-bs-toggle="modal" data-bs-target="#projectModal">
+                  <div class="feature-badge">Essential</div>
+                  <div class="feature-icon">
+                      <i class="fas fa-layer-group"></i>
+                  </div>
+                  <h3 class="feature-title">Project Organization</h3>
+                  <p class="feature-description">Group tasks into projects and categories for better organization and focus.</p>
+                  <div class="feature-cta">
+                      <span>See how it works</span>
+                      <i class="fas fa-arrow-right"></i>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Smart Reminders -->
+          <div class="col-md-4" data-categories="productivity">
+              <div class="feature-card" data-bs-toggle="modal" data-bs-target="#remindersModal">
+                  <div class="feature-badge premium">Premium</div>
+                  <div class="feature-icon">
+                      <i class="fas fa-bell"></i>
+                  </div>
+                  <h3 class="feature-title">Smart Reminders</h3>
+                  <p class="feature-description">Never miss deadlines with intelligent, customizable reminders.</p>
+                  <div class="feature-cta">
+                      <span>See how it works</span>
+                      <i class="fas fa-arrow-right"></i>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Cross-Platform Sync -->
+          <div class="col-md-4" data-categories="productivity">
+              <div class="feature-card" data-bs-toggle="modal" data-bs-target="#syncModal">
+                  <div class="feature-badge">Essential</div>
+                  <div class="feature-icon">
+                      <i class="fas fa-sync-alt"></i>
+                  </div>
+                  <h3 class="feature-title">Cross-Platform Sync</h3>
+                  <p class="feature-description">Access your tasks from anywhere. Sync across all devices in real-time.</p>
+                  <div class="feature-cta">
+                      <span>See how it works</span>
+                      <i class="fas fa-arrow-right"></i>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Progress Analytics -->
+          <div class="col-md-4" data-categories="productivity">
+              <div class="feature-card" data-bs-toggle="modal" data-bs-target="#analyticsModal">
+                  <div class="feature-badge premium">Premium</div>
+                  <div class="feature-icon">
+                      <i class="fas fa-chart-bar"></i>
+                  </div>
+                  <h3 class="feature-title">Progress Analytics</h3>
+                  <p class="feature-description">Track productivity with detailed analytics and insights to improve workflow.</p>
+                  <div class="feature-cta">
+                      <span>See how it works</span>
+                      <i class="fas fa-arrow-right"></i>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Team Collaboration -->
+          <div class="col-md-4" data-categories="collaboration">
+              <div class="feature-card" data-bs-toggle="modal" data-bs-target="#collaborationModal">
+                  <div class="feature-badge team">Team</div>
+                  <div class="feature-icon">
+                      <i class="fas fa-users"></i>
+                  </div>
+                  <h3 class="feature-title">Team Collaboration</h3>
+                  <p class="feature-description">Assign tasks, share projects, and collaborate with your team in real-time.</p>
+                  <div class="feature-cta">
+                      <span>See how it works</span>
+                      <i class="fas fa-arrow-right"></i>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Advanced Security -->
+          <div class="col-md-4" data-categories="organization">
+              <div class="feature-card" data-bs-toggle="modal" data-bs-target="#securityModal">
+                  <div class="feature-badge premium">Premium</div>
+                  <div class="feature-icon">
+                      <i class="fas fa-shield-alt"></i>
+                  </div>
+                  <h3 class="feature-title">Advanced Security</h3>
+                  <p class="feature-description">Your data is protected with enterprise-grade security and privacy controls.</p>
+                  <div class="feature-cta">
+                      <span>See how it works</span>
+                      <i class="fas fa-arrow-right"></i>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
+
+<!-- Feature Detail Modals -->
+
+<!-- Project Organization Modal -->
+<div class="modal fade" id="projectModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <div class="feature-icon modal-icon">
+                  <i class="fas fa-layer-group"></i>
+              </div>
+              <div class="flex-grow-1">
+                  <h5 class="modal-title">Project Organization</h5>
+                  <p class="text-muted mb-0">Keep your work structured and focused</p>
+              </div>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+              <div class="row">
+                  <div class="col-md-6">
+                      <h6>Key Benefits:</h6>
+                      <ul class="feature-list">
+                          <li><i class="fas fa-check text-success"></i> Unlimited projects and categories</li>
+                          <li><i class="fas fa-check text-success"></i> Hierarchical task organization</li>
+                          <li><i class="fas fa-check text-success"></i> Color-coded project labels</li>
+                          <li><i class="fas fa-check text-success"></i> Progress tracking per project</li>
+                          <li><i class="fas fa-check text-success"></i> Quick project switching</li>
+                      </ul>
+                  </div>
+                  <div class="col-md-6">
+                      <h6>How it works:</h6>
+                      <p>Create projects to group related tasks together. Set overall project goals and deadlines, then break them down into individual tasks with their own due dates and priorities.</p>
+                      <div class="feature-stats">
+                          <div class="stat-item">
+                              <div class="stat-number">85%</div>
+                              <div class="stat-label">More Organized</div>
+                          </div>
+                          <div class="stat-item">
+                              <div class="stat-number">2.3x</div>
+                              <div class="stat-label">Faster Completion</div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="feature-demo mt-4">
+                  <h6>Quick Demo:</h6>
+                  <div class="demo-project-create">
+                      <div class="input-group mb-3">
+                          <input type="text" class="form-control" placeholder="Enter project name..." value="Marketing Campaign">
+                          <button class="btn btn-outline-primary">Create Project</button>
+                      </div>
+                      <div class="demo-preview">
+                          <div class="project-preview">
+                              <div class="project-header">
+                                  <i class="fas fa-folder text-warning"></i>
+                                  <strong>Marketing Campaign</strong>
+                                  <span class="badge bg-primary">3 tasks</span>
+                              </div>
+                              <div class="project-tasks">
+                                  <div class="task-preview completed">
+                                      <i class="fas fa-check-circle text-success"></i>
+                                      <span>Design campaign assets</span>
+                                  </div>
+                                  <div class="task-preview">
+                                      <i class="far fa-circle text-muted"></i>
+                                      <span>Schedule social media posts</span>
+                                  </div>
+                                  <div class="task-preview">
+                                      <i class="far fa-circle text-muted"></i>
+                                      <span>Review analytics</span>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button class="btn btn-primary">
+                  <i class="fas fa-rocket"></i>
+                  Try This Feature
+              </button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Smart Reminders Modal -->
+<div class="modal fade" id="remindersModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <div class="feature-icon modal-icon">
+                  <i class="fas fa-bell"></i>
+              </div>
+              <div class="flex-grow-1">
+                  <h5 class="modal-title">Smart Reminders</h5>
+                  <p class="text-muted mb-0">Never miss important deadlines</p>
+              </div>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+              <div class="row">
+                  <div class="col-md-6">
+                      <h6>Reminder Types:</h6>
+                      <ul class="feature-list">
+                          <li><i class="fas fa-clock text-warning"></i> Due date reminders</li>
+                          <li><i class="fas fa-calendar text-info"></i> Daily summaries</li>
+                          <li><i class="fas fa-exclamation text-danger"></i> Priority alerts</li>
+                          <li><i class="fas fa-sync text-primary"></i> Recurring reminders</li>
+                          <li><i class="fas fa-map-marker-alt text-success"></i> Location-based</li>
+                      </ul>
+                  </div>
+                  <div class="col-md-6">
+                      <h6>Customization:</h6>
+                      <p>Set custom reminder times, choose notification methods (email, push, in-app), and create smart reminders that learn from your completion patterns.</p>
+                      <div class="feature-stats">
+                          <div class="stat-item">
+                              <div class="stat-number">92%</div>
+                              <div class="stat-label">On-time Completion</div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="feature-demo mt-4">
+                  <h6>Set a Reminder:</h6>
+                  <div class="reminder-demo">
+                      <div class="reminder-preview active">
+                          <i class="fas fa-bell text-warning"></i>
+                          <div class="reminder-content">
+                              <strong>Team Meeting</strong>
+                              <small>Due today at 2:00 PM</small>
+                          </div>
+                          <span class="reminder-time">15 min before</span>
+                      </div>
+                      <div class="reminder-controls mt-3">
+                          <div class="form-check">
+                              <input class="form-check-input" type="checkbox" checked>
+                              <label class="form-check-label">Notify via email</label>
+                          </div>
+                          <div class="form-check">
+                              <input class="form-check-input" type="checkbox" checked>
+                              <label class="form-check-label">Push notification</label>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button class="btn btn-primary">
+                  <i class="fas fa-cog"></i>
+                  Configure Reminders
+              </button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Cross-Platform Sync Modal -->
+<div class="modal fade" id="syncModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <div class="feature-icon modal-icon">
+                  <i class="fas fa-sync-alt"></i>
+              </div>
+              <div class="flex-grow-1">
+                  <h5 class="modal-title">Cross-Platform Sync</h5>
+                  <p class="text-muted mb-0">Your tasks everywhere you go</p>
+              </div>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+              <div class="row">
+                  <div class="col-md-6">
+                      <h6>Supported Platforms:</h6>
+                      <ul class="feature-list">
+                          <li><i class="fab fa-chrome text-info"></i> Web Browser</li>
+                          <li><i class="fab fa-apple text-muted"></i> iOS App</li>
+                          <li><i class="fab fa-android text-success"></i> Android App</li>
+                          <li><i class="fab fa-windows text-primary"></i> Desktop App</li>
+                          <li><i class="fas fa-watch text-muted"></i> Smart Watch</li>
+                      </ul>
+                  </div>
+                  <div class="col-md-6">
+                      <h6>Sync Features:</h6>
+                      <p>Real-time synchronization across all your devices. Offline support ensures you can work anywhere, and changes sync when you're back online.</p>
+                      <div class="feature-stats">
+                          <div class="stat-item">
+                              <div class="stat-number">Instant</div>
+                              <div class="stat-label">Sync Speed</div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="feature-demo mt-4">
+                  <h6>Device Status:</h6>
+                  <div class="devices-grid">
+                      <div class="device-item online">
+                          <i class="fab fa-chrome fa-2x"></i>
+                          <span>Chrome</span>
+                          <small class="status-online">Online</small>
+                      </div>
+                      <div class="device-item online">
+                          <i class="fab fa-apple fa-2x"></i>
+                          <span>iPhone</span>
+                          <small class="status-online">Online</small>
+                      </div>
+                      <div class="device-item offline">
+                          <i class="fab fa-windows fa-2x"></i>
+                          <span>Desktop</span>
+                          <small class="status-offline">Offline</small>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button class="btn btn-primary">
+                  <i class="fas fa-mobile-alt"></i>
+                  Download Apps
+              </button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Progress Analytics Modal -->
+<div class="modal fade" id="analyticsModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <div class="feature-icon modal-icon">
+                  <i class="fas fa-chart-bar"></i>
+              </div>
+              <div class="flex-grow-1">
+                  <h5 class="modal-title">Progress Analytics</h5>
+                  <p class="text-muted mb-0">Data-driven productivity insights</p>
+              </div>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+              <div class="row">
+                  <div class="col-md-6">
+                      <h6>Analytics Features:</h6>
+                      <ul class="feature-list">
+                          <li><i class="fas fa-chart-line text-primary"></i> Completion trends</li>
+                          <li><i class="fas fa-clock text-warning"></i> Time tracking</li>
+                          <li><i class="fas fa-tachometer-alt text-info"></i> Productivity scores</li>
+                          <li><i class="fas fa-calendar text-success"></i> Weekly/monthly reports</li>
+                          <li><i class="fas fa-bullseye text-danger"></i> Goal tracking</li>
+                      </ul>
+                  </div>
+                  <div class="col-md-6">
+                      <h6>Insights Provided:</h6>
+                      <p>Get detailed analytics about your work patterns, identify productivity bottlenecks, and receive personalized recommendations to improve your workflow.</p>
+                      <div class="feature-stats">
+                          <div class="stat-item">
+                              <div class="stat-number">67%</div>
+                              <div class="stat-label">Efficiency Gain</div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="feature-demo mt-4">
+                  <h6>Sample Analytics:</h6>
+                  <div class="analytics-preview">
+                      <div class="analytics-row">
+                          <span>Weekly Completion Rate</span>
+                          <div class="progress">
+                              <div class="progress-bar" style="width: 78%">78%</div>
+                          </div>
+                      </div>
+                      <div class="analytics-row">
+                          <span>Average Task Duration</span>
+                          <div class="progress">
+                              <div class="progress-bar bg-warning" style="width: 45%">2.3h</div>
+                          </div>
+                      </div>
+                      <div class="analytics-row">
+                          <span>Productivity Score</span>
+                          <div class="progress">
+                              <div class="progress-bar bg-success" style="width: 85%">85/100</div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button class="btn btn-primary">
+                  <i class="fas fa-chart-pie"></i>
+                  View My Analytics
+              </button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Team Collaboration Modal -->
+<div class="modal fade" id="collaborationModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <div class="feature-icon modal-icon">
+                  <i class="fas fa-users"></i>
+              </div>
+              <div class="flex-grow-1">
+                  <h5 class="modal-title">Team Collaboration</h5>
+                  <p class="text-muted mb-0">Work together seamlessly</p>
+              </div>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+              <div class="row">
+                  <div class="col-md-6">
+                      <h6>Collaboration Tools:</h6>
+                      <ul class="feature-list">
+                          <li><i class="fas fa-share-alt text-primary"></i> Task assignment</li>
+                          <li><i class="fas fa-comments text-info"></i> Real-time comments</li>
+                          <li><i class="fas fa-history text-warning"></i> Change history</li>
+                          <li><i class="fas fa-check-double text-success"></i> Approval workflows</li>
+                          <li><i class="fas fa-video text-danger"></i> Integrated meetings</li>
+                      </ul>
+                  </div>
+                  <div class="col-md-6">
+                      <h6>Team Features:</h6>
+                      <p>Invite team members, assign tasks with deadlines, track everyone's progress, and collaborate in real-time with built-in commenting and file sharing.</p>
+                      <div class="feature-stats">
+                          <div class="stat-item">
+                              <div class="stat-number">3.1x</div>
+                              <div class="stat-label">Faster Projects</div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="feature-demo mt-4">
+                  <h6>Team Preview:</h6>
+                  <div class="team-preview">
+                      <div class="team-members">
+                          <div class="member">
+                              <div class="member-avatar">JD</div>
+                              <span>John Doe</span>
+                              <span class="badge bg-primary">3 tasks</span>
+                          </div>
+                          <div class="member">
+                              <div class="member-avatar">SJ</div>
+                              <span>Sarah Johnson</span>
+                              <span class="badge bg-success">5 tasks</span>
+                          </div>
+                          <div class="member">
+                              <div class="member-avatar">MB</div>
+                              <span>Mike Brown</span>
+                              <span class="badge bg-warning">2 tasks</span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button class="btn btn-primary">
+                  <i class="fas fa-user-plus"></i>
+                  Invite Team Members
+              </button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Advanced Security Modal -->
+<div class="modal fade" id="securityModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <div class="feature-icon modal-icon">
+                  <i class="fas fa-shield-alt"></i>
+              </div>
+              <div class="flex-grow-1">
+                  <h5 class="modal-title">Advanced Security</h5>
+                  <p class="text-muted mb-0">Enterprise-grade protection</p>
+              </div>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+              <div class="row">
+                  <div class="col-md-6">
+                      <h6>Security Features:</h6>
+                      <ul class="feature-list">
+                          <li><i class="fas fa-lock text-success"></i> End-to-end encryption</li>
+                          <li><i class="fas fa-fingerprint text-primary"></i> Biometric authentication</li>
+                          <li><i class="fas fa-shield-check text-info"></i> SOC 2 Compliance</li>
+                          <li><i class="fas fa-database text-warning"></i> Daily backups</li>
+                          <li><i class="fas fa-eye-slash text-muted"></i> Zero-knowledge architecture</li>
+                      </ul>
+                  </div>
+                  <div class="col-md-6">
+                      <h6>Data Protection:</h6>
+                      <p>Your data is encrypted both in transit and at rest. We follow industry best practices and undergo regular security audits to ensure your information remains safe.</p>
+                      <div class="feature-stats">
+                          <div class="stat-item">
+                              <div class="stat-number">99.9%</div>
+                              <div class="stat-label">Uptime</div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="feature-demo mt-4">
+                  <h6>Security Status:</h6>
+                  <div class="security-status">
+                      <div class="security-item verified">
+                          <i class="fas fa-check-circle text-success"></i>
+                          <span>Encryption Active</span>
+                      </div>
+                      <div class="security-item verified">
+                          <i class="fas fa-check-circle text-success"></i>
+                          <span>Two-Factor Enabled</span>
+                      </div>
+                      <div class="security-item warning">
+                          <i class="fas fa-exclamation-triangle text-warning"></i>
+                          <span>Backup Pending</span>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button class="btn btn-primary">
+                  <i class="fas fa-shield-alt"></i>
+                  Security Settings
+              </button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<style>
+/* Enhanced Feature Cards */
+.feature-card {
+  background-color: rgba(15, 23, 42, 0.7);
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  height: 100%;
+  transition: all 0.3s;
+  border: 1px solid rgba(100, 116, 139, 0.1);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  border-color: #7c3aed;
+}
+
+.feature-card:hover .feature-cta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.feature-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  z-index: 2;
+}
+
+.feature-badge:not(.premium):not(.team) {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.feature-badge.premium {
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.feature-badge.team {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.feature-cta {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(30, 41, 59, 0.9));
+  padding: 3rem 1.5rem 1.5rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #7c3aed;
+  font-weight: 600;
+}
+
+/* Modal Styles */
+.modal-icon {
+  width: 60px;
+  height: 60px;
+  margin-right: 1rem;
+  background: rgba(124, 58, 237, 0.1);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: #7c3aed;
+}
+
+.feature-list {
+  list-style: none;
+  padding: 0;
+}
+
+.feature-list li {
+  padding: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.feature-stats {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 1rem;
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 10px;
+  border: 1px solid rgba(100, 116, 139, 0.2);
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #7c3aed;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+/* Demo Elements */
+.feature-demo {
+  border-top: 1px solid rgba(100, 116, 139, 0.2);
+  padding-top: 1.5rem;
+}
+
+.demo-project-create {
+  background: rgba(15, 23, 42, 0.5);
+  padding: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid rgba(100, 116, 139, 0.2);
+}
+
+.project-preview {
+  background: rgba(30, 41, 59, 0.7);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.project-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(100, 116, 139, 0.2);
+}
+
+.task-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+.task-preview.completed {
+  opacity: 0.6;
+}
+
+.reminder-preview {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(30, 41, 59, 0.7);
+  border-radius: 10px;
+  border-left: 4px solid #f59e0b;
+}
+
+.reminder-content {
+  flex: 1;
+}
+
+.devices-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.device-item {
+  text-align: center;
+  padding: 1rem;
+  background: rgba(30, 41, 59, 0.7);
+  border-radius: 10px;
+  border: 1px solid rgba(100, 116, 139, 0.2);
+}
+
+.device-item.online {
+  border-color: #10b981;
+}
+
+.device-item.offline {
+  border-color: #64748b;
+}
+
+.status-online {
+  color: #10b981;
+}
+
+.status-offline {
+  color: #64748b;
+}
+
+.analytics-preview {
+  background: rgba(30, 41, 59, 0.7);
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.analytics-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.analytics-row span {
+  min-width: 150px;
+  font-size: 0.9rem;
+}
+
+.progress {
+  flex: 1;
+  height: 20px;
+  background: rgba(100, 116, 139, 0.2);
+}
+
+.team-members {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.member {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: rgba(30, 41, 59, 0.7);
+  border-radius: 8px;
+}
+
+.member-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #7c3aed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.security-status {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.security-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(30, 41, 59, 0.7);
+  border-radius: 8px;
+}
+
+.security-item.verified {
+  border-left: 4px solid #10b981;
+}
+
+.security-item.warning {
+  border-left: 4px solid #f59e0b;
+}
+
+/* Feature Tabs */
+.feature-tabs {
+  margin-bottom: 2rem;
+}
+
+.feature-tabs .btn {
+  border-radius: 20px;
+  margin: 0 0.25rem;
+}
+
+/* Filter functionality */
+[data-categories] {
+  transition: all 0.3s ease;
+}
+
+.feature-hidden {
+  opacity: 0.3;
+  transform: scale(0.95);
+  pointer-events: none;
+}
+</style>
+
+<script>
+// Feature filtering functionality
+document.addEventListener('DOMContentLoaded', function() {
+  // Feature filter tabs
+  const filterButtons = document.querySelectorAll('.feature-tabs .btn');
+  const featureCards = document.querySelectorAll('[data-categories]');
   
-  <div class="overlay" id="overlay"></div>
-
-  <!-- DASHBOARD -->
-  <main class="py-5" style="margin-top: 76px;">
-    <div class="container">
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-          <h2 id="greeting">Good Morning</h2>
-          <p id="quote" class="text-muted mb-0"></p>
-        </div>
-        <div class="d-flex align-items-center">
-          <div class="me-3">
-            <div class="task-progress">
-              <span class="progress-text" id="completionRate">0% Complete</span>
-              <div class="progress flex-grow-1" style="width: 150px;">
-                <div id="completionProgress" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
-              </div>
-            </div>
-          </div>
-          <div class="text-end">
-            <img id="avatarLarge" src="https://ui-avatars.com/api/?name=User&background=4361ee&color=fff" alt="avatar" class="rounded-circle" width="64" height="64">
-          </div>
-        </div>
-      </div>
-
-      <!-- Stats -->
-      <div class="row g-3 mb-4">
-        <div class="col-md-3">
-          <div class="card shadow-sm stat-card">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-start">
-                <div>
-                  <h6 class="text-muted">Total Tasks</h6>
-                  <h3 id="totalTasks">0</h3>
-                </div>
-                <div class="bg-primary bg-opacity-10 p-2 rounded">
-                  <i class="fas fa-tasks text-primary"></i>
-                </div>
-              </div>
-              <p class="small text-muted mb-0">All tasks in your list</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card shadow-sm stat-card">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-start">
-                <div>
-                  <h6 class="text-muted">Completed</h6>
-                  <h3 id="completedTasks">0</h3>
-                </div>
-                <div class="bg-success bg-opacity-10 p-2 rounded">
-                  <i class="fas fa-check-circle text-success"></i>
-                </div>
-              </div>
-              <p class="small text-muted mb-0">Tasks marked as done</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card shadow-sm stat-card">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-start">
-                <div>
-                  <h6 class="text-muted">Pending</h6>
-                  <h3 id="pendingTasks">0</h3>
-                </div>
-                <div class="bg-warning bg-opacity-10 p-2 rounded">
-                  <i class="fas fa-clock text-warning"></i>
-                </div>
-              </div>
-              <p class="small text-muted mb-0">Tasks still to do</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card shadow-sm stat-card">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-start">
-                <div>
-                  <h6 class="text-muted">Overdue</h6>
-                  <h3 id="overdueTasks">0</h3>
-                </div>
-                <div class="bg-danger bg-opacity-10 p-2 rounded">
-                  <i class="fas fa-exclamation-circle text-danger"></i>
-                </div>
-              </div>
-              <p class="small text-muted mb-0">Tasks past due date</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Progress chart & Quick add -->
-      <div class="row mt-4">
-        <div class="col-lg-8">
-          <div class="card p-3 shadow-sm">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <h5 class="mb-0">Progress Overview</h5>
-              <div class="btn-group btn-group-sm">
-                <button class="btn btn-outline-secondary active" data-period="week">Week</button>
-                <button class="btn btn-outline-secondary" data-period="month">Month</button>
-                <button class="btn btn-outline-secondary" data-period="year">Year</button>
-              </div>
-            </div>
-            <canvas id="progressChart" height="120"></canvas>
-          </div>
+  filterButtons.forEach(button => {
+      button.addEventListener('click', function() {
+          // Update active button
+          filterButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
           
-          <!-- Upcoming deadlines -->
-          <div class="card mt-4 p-3 shadow-sm">
-            <h5>Upcoming Deadlines</h5>
-            <div id="upcomingTasks" class="mt-2">
-              <!-- Will be populated by JavaScript -->
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4">
-          <div class="card p-3 shadow-sm">
-            <h5>Quick Add Task</h5>
-            <div class="mb-2">
-              <input id="quickTaskText" class="form-control mb-2" placeholder="Task title">
-              <select id="quickCategory" class="form-select mb-2">
-                <option value="General">General</option>
-                <option value="Work">Work</option>
-                <option value="Personal">Personal</option>
-                <option value="Study">Study</option>
-                <option value="Shopping">Shopping</option>
-                <option value="Health">Health</option>
-                <option value="Finance">Finance</option>
-              </select>
-              <div class="d-flex gap-2">
-                <input id="quickDue" type="date" class="form-control">
-                <select id="quickPriority" class="form-select" style="max-width:140px;">
-                  <option value="Low">Low</option>
-                  <option value="Medium" selected>Medium</option>
-                  <option value="High">High</option>
-                </select>
-              </div>
-            </div>
-            <button id="quickAddBtn" class="btn btn-primary w-100"><i class="fas fa-plus"></i> Add Task</button>
-          </div>
-          
-          <!-- Productivity Tips -->
-          <div class="card mt-4 p-3 shadow-sm">
-            <h5>Productivity Tips</h5>
-            <div id="productivityTips">
-              <div class="tip-item mb-3">
-                <h6 class="mb-1"><i class="fas fa-lightbulb text-warning me-2"></i>Time Blocking</h6>
-                <p class="small text-muted mb-0">Schedule specific blocks of time for different types of tasks to maintain focus.</p>
-              </div>
-              <div class="tip-item mb-3">
-                <h6 class="mb-1"><i class="fas fa-lightbulb text-warning me-2"></i>The Two-Minute Rule</h6>
-                <p class="small text-muted mb-0">If a task takes less than two minutes, do it immediately.</p>
-              </div>
-              <div class="tip-item">
-                <h6 class="mb-1"><i class="fas fa-lightbulb text-warning me-2"></i>Prioritize Ruthlessly</h6>
-                <p class="small text-muted mb-0">Focus on high-impact tasks first to maximize productivity.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Recent tasks -->
-      <div class="card mt-4 p-3 shadow-sm">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5 class="mb-0">Recent Tasks</h5>
-          <a href="tasks.html" class="btn btn-sm btn-outline-primary">View All</a>
-        </div>
-        <ul id="recentTasks" class="list-group list-group-flush"></ul>
-      </div>
-    </div>
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="bg-dark text-white text-center py-4 mt-5">
-    <div class="container">
-      <p class="mb-2">© 2025 To-Do Manager Pro+ • Designed by Md Monir Hossain</p>
-      <div class="d-flex justify-content-center gap-3">
-        <a href="#" class="text-white-50"><i class="fab fa-twitter"></i></a>
-        <a href="#" class="text-white-50"><i class="fab fa-facebook"></i></a>
-        <a href="#" class="text-white-50"><i class="fab fa-linkedin"></i></a>
-        <a href="#" class="text-white-50"><i class="fab fa-github"></i></a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- SCRIPTS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    // Enhanced main.js with new features
-
-    // Get tasks from localStorage
-    function getTasks() {
-      return JSON.parse(localStorage.getItem('tasks') || '[]');
-    }
+          const category = this.dataset.category;
+          filterFeatures(category);
+      });
+  });
+  
+  function filterFeatures(category) {
+      featureCards.forEach(card => {
+          if (category === 'all' || card.dataset.categories.includes(category)) {
+              card.classList.remove('feature-hidden');
+          } else {
+              card.classList.add('feature-hidden');
+          }
+      });
+  }
+  
+  // Add click animations to feature cards
+  featureCards.forEach(card => {
+      card.addEventListener('click', function() {
+          this.style.transform = 'scale(0.98)';
+          setTimeout(() => {
+              this.style.transform = '';
+          }, 150);
+      });
+  });
+});
+</script>
     
-    function saveTasks(tasks) {
-      localStorage.setItem('tasks', JSON.stringify(tasks));
-    }
 
-    // Get profile
-    function getProfile() {
-      return JSON.parse(localStorage.getItem('profile') || '{}');
-    }
-    
-    function saveProfile(profile) {
-      localStorage.setItem('profile', JSON.stringify(profile));
-    }
-
-    // Get projects
-    function getProjects() {
-      return JSON.parse(localStorage.getItem('projects') || '[]');
-    }
-
-    // Greeting & quote
-    function setGreetingAndQuote() {
-      const hours = new Date().getHours();
-      let greet = 'Good Evening';
-      if (hours < 12) greet = 'Good Morning';
-      else if (hours < 18) greet = 'Good Afternoon';
-      
-      const profile = getProfile();
-      const name = profile.name || 'User';
-      const greetingEl = document.getElementById('greeting');
-      if (greetingEl) greetingEl.textContent = `${greet}, ${name} 👋`;
-
-      const quotes = [
-        "Success is the sum of small efforts repeated daily.",
-        "Plan your work and work your plan.",
-        "Discipline is the bridge between goals and accomplishment.",
-        "Small daily improvements are the key to staggering long-term results.",
-        "Productivity is never an accident. It is always the result of a commitment to excellence.",
-        "The key is not to prioritize what's on your schedule, but to schedule your priorities."
-      ];
-      const qEl = document.getElementById('quote');
-      if (qEl) qEl.textContent = quotes[Math.floor(Math.random()*quotes.length)];
-    }
-
-    // Profile display
-    function applyProfile() {
-      const profile = getProfile();
-      if (profile.name) {
-        const pName = document.getElementById('profileName');
-        const sidebarName = document.getElementById('sidebarUserName');
-        if (pName) pName.textContent = profile.name;
-        if (sidebarName) sidebarName.textContent = profile.name;
-      }
-      if (profile.avatar) {
-        const avatarSmall = document.getElementById('avatarSmall');
-        const avatarLarge = document.getElementById('avatarLarge');
-        const sidebarAvatar = document.getElementById('sidebarAvatar');
-        if (avatarSmall) avatarSmall.src = profile.avatar;
-        if (avatarLarge) avatarLarge.src = profile.avatar;
-        if (sidebarAvatar) sidebarAvatar.src = profile.avatar;
-      }
-    }
-
-    // Update navbar stats
-    function updateNavbarStats() {
-      const tasks = getTasks();
-      const total = tasks.length;
-      const completed = tasks.filter(t => t.completed).length;
-      const pending = total - completed;
-      
-      document.getElementById('navTotalTasks').textContent = `${total} Tasks`;
-      document.getElementById('navCompletedTasks').textContent = `${completed} Done`;
-      document.getElementById('navPendingTasks').textContent = `${pending} Pending`;
-      
-      // Update sidebar counts
-      document.getElementById('sidebarTaskCount').textContent = total;
-      document.getElementById('sidebarProjectCount').textContent = getProjects().length;
-    }
-
-    // Progress chart
-    function renderProgressChart() {
-      const tasks = getTasks();
-      const total = tasks.length;
-      const completed = tasks.filter(t => t.completed).length;
-      const pending = total - completed;
-      const overdue = tasks.filter(t => t.dueDate && !t.completed && new Date(t.dueDate) < new Date()).length;
-
-      // Stats elements
-      const setText = (id, value) => { 
-        const el = document.getElementById(id); 
-        if (el) el.textContent = value; 
-      };
-      
-      setText('totalTasks', total);
-      setText('completedTasks', completed);
-      setText('pendingTasks', pending);
-      setText('overdueTasks', overdue);
-
-      // Completion rate
-      const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
-      setText('completionRate', `${completionRate}% Complete`);
-      const progressBar = document.getElementById('completionProgress');
-      if (progressBar) {
-        progressBar.style.width = `${completionRate}%`;
-      }
-
-      const ctx = document.getElementById('progressChart');
-      if (!ctx) return;
-      
-      // Destroy existing chart if present
-      if (ctx.chart) ctx.chart.destroy();
-
-      ctx.chart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Completed', 'Pending', 'Overdue'],
-          datasets: [{
-            data: [completed, pending, overdue],
-            backgroundColor: ['#4cc9a7', '#ff9e00', '#f72585'],
-            borderWidth: 0
-          }]
-        },
-        options: {
-          plugins: { 
-            legend: { 
-              position: 'bottom',
-              labels: {
-                usePointStyle: true,
-                padding: 15
-              }
-            } 
-          },
-          cutout: '70%'
-        }
-      });
-    }
-
-    // Recent tasks list
-    function renderRecentTasks() {
-      const listEl = document.getElementById('recentTasks');
-      if (!listEl) return;
-      
-      const tasks = getTasks().slice().reverse().slice(0,5);
-      listEl.innerHTML = '';
-      
-      if (tasks.length === 0) {
-        listEl.innerHTML = '<li class="list-group-item text-muted text-center py-4">No recent tasks</li>';
-        return;
-      }
-      
-      tasks.forEach(t => {
-        const li = document.createElement('li');
-        li.className = 'list-group-item d-flex justify-content-between align-items-center';
-        
-        const dueDate = t.dueDate ? new Date(t.dueDate).toLocaleDateString() : 'No due date';
-        const isOverdue = t.dueDate && !t.completed && new Date(t.dueDate) < new Date();
-        
-        li.innerHTML = `
-          <div class="d-flex align-items-center">
-            <input type="checkbox" class="form-check-input me-3" ${t.completed ? 'checked' : ''} data-id="${t.id}">
-            <div>
-              <div class="task-title ${t.completed ? 'completed' : ''}">${escapeHtml(t.text)}</div>
-              <div class="small text-muted">${t.category || 'General'} • ${dueDate} ${isOverdue ? '<span class="badge bg-danger ms-1">Overdue</span>' : ''}</div>
+    <!-- Testimonials Section -->
+    <section class="testimonials-section" id="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Our Users Say</h2>
+            <p class="text-center text-muted mb-5">Join thousands of satisfied users who transformed their productivity</p>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            "TaskFlow Pro has completely transformed how our team manages projects. We've seen a 40% increase in productivity since we started using it."
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">JS</div>
+                            <div class="testimonial-info">
+                                <h5>Jessica Smith</h5>
+                                <p>Product Manager, TechCorp</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            "As a freelancer, staying organized is crucial. TaskFlow Pro helps me keep track of all my clients and deadlines in one place."
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">MD</div>
+                            <div class="testimonial-info">
+                                <h5>Michael Davis</h5>
+                                <p>Freelance Designer</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            "The analytics feature alone is worth the subscription. I can now identify bottlenecks in my workflow and address them proactively."
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">SR</div>
+                            <div class="testimonial-info">
+                                <h5>Sarah Johnson</h5>
+                                <p>Startup Founder</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" id="faq">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="text-center text-muted mb-5">Get answers to the most common questions about TaskFlow Pro</p>
+            
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq1">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#answer1">
+                            Can I use TaskFlow Pro for free?
+                        </button>
+                    </h2>
+                    <div id="answer1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes! We offer a free forever plan that includes basic task management features for up to 5 projects. You can upgrade to our Professional or Enterprise plans anytime to unlock more advanced features.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq2">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#answer2">
+                            Is my data secure with TaskFlow Pro?
+                        </button>
+                    </h2>
+                    <div id="answer2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Absolutely. We use enterprise-grade security measures including end-to-end encryption, regular security audits, and compliance with global data protection regulations. Your data is always safe with us.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq3">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#answer3">
+                            Can I collaborate with my team?
+                        </button>
+                    </h2>
+                    <div id="answer3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes, team collaboration is a core feature of TaskFlow Pro. You can assign tasks, share projects, comment on tasks, and track team progress in real-time. Team features are available in our Professional and Enterprise plans.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq4">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#answer4">
+                            Does TaskFlow Pro integrate with other tools?
+                        </button>
+                    </h2>
+                    <div id="answer4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes, we offer integrations with popular tools like Slack, Google Calendar, Microsoft Teams, and more. Our Enterprise plan also includes custom integration options to fit your specific workflow.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq5">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#answer5">
+                            Can I cancel my subscription anytime?
+                        </button>
+                    </h2>
+                    <div id="answer5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes, you can cancel your subscription at any time. If you cancel, you'll continue to have access to your paid features until the end of your billing period, after which your account will revert to the free plan.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!-- Team Section -->
+<section class="team-section">
+  <div class="container">
+      <h2 class="section-title">Meet Our Developer</h2>
+      <p class="text-center text-muted mb-5">The passionate creator behind TaskFlow Pro</p>
+      
+      <div class="row justify-content-center">
+          <div class="col-md-6 col-lg-4">
+              <div class="team-card">
+                  <div class="team-avatar" style="width: 150px; height: 150px; border-radius: 50%; margin: 0 auto 1.5rem; overflow: hidden; border: 4px solid rgba(124, 58, 237, 0.3); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);">
+                      <img src="assets/images/Monir.jpg" alt="Md Monir Hossain" style="width: 100%; height: 100%; object-fit: cover;">
+                  </div>
+                  <h3 class="team-name" style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; color: #f8fafc;">Md Monir Hossain</h3>
+                  <div class="team-role" style="color: #7c3aed; font-weight: 600; margin-bottom: 1.5rem; font-size: 1.1rem;">Full Stack Developer & UI/UX Designer</div>
+                  <p class="team-bio" style="color: #64748b; margin-bottom: 1.5rem; line-height: 1.6;">Passionate about creating intuitive and visually appealing web applications. Specializing in modern frontend technologies and user-centered design principles to deliver exceptional digital experiences.</p>
+                  <div class="team-skills" style="display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 1.5rem;">
+                      <span style="background: rgba(124, 58, 237, 0.1); color: #7c3aed; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500; border: 1px solid rgba(124, 58, 237, 0.3);">JavaScript</span>
+
+                      <span style="background: rgba(124, 58, 237, 0.1); color: #7c3aed; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500; border: 1px solid rgba(124, 58, 237, 0.3);">UI/UX Design</span>
+                      <span style="background: rgba(124, 58, 237, 0.1); color: #7c3aed; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500; border: 1px solid rgba(124, 58, 237, 0.3);">Bootstrap</span>
+
+                  </div>
+                  <div class="social-icons" style="display: flex; gap: 1rem; justify-content: center;">
+                      <a href="https://md-monir-hossain.netlify.app/" class="social-icon" title="Portfolio" style="display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; border-radius: 50%; background-color: rgba(100, 116, 139, 0.2); color: #f8fafc; transition: all 0.3s; text-decoration: none;">
+                          <i class="fas fa-globe"></i>
+                      </a>
+                      <a href="https://github.com/Md-Monir-Hossain-1165" class="social-icon" title="GitHub" style="display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; border-radius: 50%; background-color: rgba(100, 116, 139, 0.2); color: #f8fafc; transition: all 0.3s; text-decoration: none;">
+                          <i class="fab fa-github"></i>
+                      </a>
+                      <a href="" class="social-icon" title="LinkedIn" style="display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; border-radius: 50%; background-color: rgba(100, 116, 139, 0.2); color: #f8fafc; transition: all 0.3s; text-decoration: none;">
+                          <i class="fab fa-linkedin-in"></i>
+                      </a>
+                      <a href="mailto:mdmonirhossain1165@gmail.com" class="social-icon" title="Email" style="display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; border-radius: 50%; background-color: rgba(100, 116, 139, 0.2); color: #f8fafc; transition: all 0.3s; text-decoration: none;">
+                          <i class="fas fa-envelope"></i>
+                      </a>
+                  </div>
+              </div>
           </div>
-          <div class="text-end">
-            ${t.completed ? 
-              '<span class="badge bg-success">Done</span>' : 
-              (t.priority === 'High' ? 
-                '<span class="badge badge-priority-high">High</span>' : 
-                (t.priority === 'Medium' ? 
-                  '<span class="badge badge-priority-medium">Med</span>' : 
-                  '<span class="badge badge-priority-low">Low</span>'))}
-          </div>`;
-        listEl.appendChild(li);
-      });
+      </div>
+  </div>
+</section>
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="cta-title">Ready to boost your productivity?</h2>
+            <p class="cta-subtitle">Join thousands of teams and individuals who use TaskFlow Pro to get more done.</p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <button class="btn btn-light btn-lg">
+                    <i class="fas fa-rocket"></i>
+                    Get Started Free
+                </button>
+                <button class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-calendar"></i>
+                    Schedule a Demo
+                </button>
+            </div>
+        </div>
+    </section>
 
-      // Add event listeners to checkboxes
-      document.querySelectorAll('#recentTasks input[type="checkbox"]').forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-          const taskId = parseInt(this.getAttribute('data-id'));
-          const tasks = getTasks();
-          const task = tasks.find(t => t.id === taskId);
-          if (task) {
-            task.completed = this.checked;
-            saveTasks(tasks);
-            renderProgressChart();
-            renderRecentTasks();
-            updateNavbarStats();
-          }
-        });
-      });
-    }
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h4 class="mb-3">
+                        <i class="fas fa-tasks me-2"></i>
+                        TaskFlow Pro
+                    </h4>
+                    <p class="mb-4">The world's most advanced task manager for teams and individuals. Organize your work and life, finally.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h5 class="mb-3">Product</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Integrations</a></li>
+                        <li><a href="#">Updates</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h5 class="mb-3">Company</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <h5 class="mb-3">Support</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <h5 class="mb-3">Download</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">iOS App</a></li>
+                        <li><a href="#">Android App</a></li>
+                        <li><a href="#">Mac App</a></li>
+                        <li><a href="#">Windows App</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 TaskFlow Pro. Designed by Md Monir Hossain.
+            </div>
+        </div>
+    </footer>
 
-    // Upcoming deadlines
-    function renderUpcomingTasks() {
-      const container = document.getElementById('upcomingTasks');
-      if (!container) return;
-      
-      const tasks = getTasks()
-        .filter(t => t.dueDate && !t.completed)
-        .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
-        .slice(0, 5);
-      
-      container.innerHTML = '';
-      
-      if (tasks.length === 0) {
-        container.innerHTML = '<p class="text-muted text-center py-3">No upcoming deadlines</p>';
-        return;
-      }
-      
-      tasks.forEach(t => {
-        const dueDate = new Date(t.dueDate);
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        
-        let dueText = '';
-        if (dueDate.toDateString() === today.toDateString()) {
-          dueText = '<span class="badge bg-danger">Today</span>';
-        } else if (dueDate.toDateString() === tomorrow.toDateString()) {
-          dueText = '<span class="badge bg-warning">Tomorrow</span>';
-        } else {
-          dueText = dueDate.toLocaleDateString();
-        }
-        
-        const div = document.createElement('div');
-        div.className = 'd-flex justify-content-between align-items-center mb-2 pb-2 border-bottom';
-        div.innerHTML = `
-          <div>
-            <div class="task-title">${escapeHtml(t.text)}</div>
-            <div class="small text-muted">${t.category || 'General'}</div>
-          </div>
-          <div class="text-end">
-            <div>${dueText}</div>
-            <div class="small">${t.priority === 'High' ? 
-              '<span class="badge badge-priority-high">High</span>' : 
-              (t.priority === 'Medium' ? 
-                '<span class="badge badge-priority-medium">Med</span>' : 
-                '<span class="badge badge-priority-low">Low</span>')}</div>
-          </div>
-        `;
-        container.appendChild(div);
-      });
-    }
+    <!-- Add Task Modal -->
+    <div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="taskModalLabel">Add New Task</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="taskForm">
+                        <div class="mb-3">
+                            <label for="taskTitle" class="form-label">Task Title</label>
+                            <input type="text" class="form-control" id="taskTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="taskDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="taskDescription" rows="3"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="taskPriority" class="form-label">Priority</label>
+                                    <select class="form-select" id="taskPriority">
+                                        <option value="low">Low</option>
+                                        <option value="medium" selected>Medium</option>
+                                        <option value="high">High</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="taskDueDate" class="form-label">Due Date</label>
+                                    <input type="date" class="form-control" id="taskDueDate">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="taskCategory" class="form-label">Category</label>
+                            <select class="form-select" id="taskCategory">
+                                <option value="personal">Personal</option>
+                                <option value="work" selected>Work</option>
+                                <option value="shopping">Shopping</option>
+                                <option value="health">Health</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveTask">Save Task</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    // Helper to escape HTML
-    function escapeHtml(s) {
-      return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    }
-
-    // Sidebar toggle
-    function initSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('overlay');
-      const toggleBtn = document.getElementById('sidebarToggle');
-      
-      if (toggleBtn) {
-        toggleBtn.addEventListener('click', () => {
-          sidebar.classList.add('show');
-          overlay.classList.add('show');
-          document.body.classList.add('sidebar-open');
-        });
-      }
-      
-      if (overlay) {
-        overlay.addEventListener('click', () => {
-          sidebar.classList.remove('show');
-          overlay.classList.remove('show');
-          document.body.classList.remove('sidebar-open');
-        });
-      }
-      
-      // Close sidebar when clicking on a link (mobile)
-      document.querySelectorAll('.sidebar .nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-          if (window.innerWidth < 992) {
-            sidebar.classList.remove('show');
-            overlay.classList.remove('show');
-            document.body.classList.remove('sidebar-open');
-          }
-        });
-      });
-    }
-
-    // Initialize demo data if none exists
-    function initializeDemoData() {
-      if (!localStorage.getItem('tasks')) {
-        const demoTasks = [
-          {
-            id: 1,
-            text: 'Welcome to To-Do Manager Pro+!',
-            category: 'General',
-            priority: 'Low',
-            completed: false,
-            createdAt: new Date().toISOString()
-          },
-          {
-            id: 2,
-            text: 'Explore the dashboard features',
-            category: 'General',
-            priority: 'Medium',
-            completed: false,
-            createdAt: new Date().toISOString()
-          },
-          {
-            id: 3,
-            text: 'Create your first task',
-            category: 'General',
-            priority: 'High',
-            completed: true,
-            createdAt: new Date().toISOString()
-          }
-        ];
-        saveTasks(demoTasks);
-      }
-      
-      if (!localStorage.getItem('profile')) {
-        const demoProfile = {
-          name: 'User',
-          email: 'user@example.com',
-          avatar: 'https://ui-avatars.com/api/?name=User&background=4361ee&color=fff',
-          memberSince: new Date().getFullYear().toString()
-        };
-        saveProfile(demoProfile);
-      }
-    }
-
-    // On DOM ready
-    document.addEventListener('DOMContentLoaded', () => {
-      // Initialize demo data
-      initializeDemoData();
-      
-      // Initialize all components
-      setGreetingAndQuote();
-      applyProfile();
-      renderProgressChart();
-      renderRecentTasks();
-      renderUpcomingTasks();
-      updateNavbarStats();
-      initSidebar();
-
-      // Quick add on dashboard
-      const quickAddBtn = document.getElementById('quickAddBtn');
-      if (quickAddBtn) {
-        quickAddBtn.addEventListener('click', () => {
-          const text = document.getElementById('quickTaskText').value.trim();
-          const category = document.getElementById('quickCategory').value;
-          const due = document.getElementById('quickDue').value || null;
-          const priority = document.getElementById('quickPriority').value;
-          
-          if (!text) { 
-            Swal.fire({
-              icon: 'warning',
-              title: 'Task Required',
-              text: 'Please enter a task description'
-            });
-            return; 
-          }
-          
-          const tasks = getTasks();
-          tasks.push({
-            id: Date.now(),
-            text, 
-            category, 
-            dueDate: due, 
-            priority, 
-            completed: false, 
-            createdAt: new Date().toISOString()
-          });
-          
-          saveTasks(tasks);
-          
-          Swal.fire({
-            icon: 'success',
-            title: 'Task Added',
-            text: 'Your task has been added successfully',
-            timer: 1500,
-            showConfirmButton: false
-          });
-          
-          document.getElementById('quickTaskText').value = '';
-          renderProgressChart();
-          renderRecentTasks();
-          renderUpcomingTasks();
-          updateNavbarStats();
-        });
-      }
-
-      // Quick add from navbar
-      const quickNavAdd = document.getElementById('quickNavAdd');
-      if (quickNavAdd) {
-        quickNavAdd.addEventListener('click', function() {
-          document.getElementById('quickTaskText').focus();
-        });
-      }
-
-      // Logout button
-      const logoutBtn = document.getElementById('logoutBtn');
-      if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          Swal.fire({
-            title: 'Logout?',
-            text: 'Are you sure you want to logout?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, Logout',
-            cancelButtonText: 'Cancel'
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.href = 'login.html';
-            }
-          });
-        });
-      }
-    });
-  </script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="assets/js/main.js"></script>
 </body>
 </html>
