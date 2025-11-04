@@ -9,6 +9,7 @@
   --warning: #f59e0b;
   --danger: #ef4444;
   --info: #3b82f6;
+  --text-muted: #dbe1eb;
 }
 
 * {
@@ -825,49 +826,6 @@ footer {
   opacity: 0.9;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .hero-title {
-      font-size: 2.5rem;
-  }
-  
-  .task-input-group {
-      flex-direction: column;
-  }
-  
-  .task-input {
-      border-radius: 10px;
-      margin-bottom: 0.5rem;
-  }
-  
-  .task-btn {
-      border-radius: 10px;
-      padding: 0.75rem;
-      justify-content: center;
-  }
-  
-  .filter-buttons {
-      flex-wrap: wrap;
-  }
-  
-  .task-item {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.75rem;
-  }
-  
-  .task-actions {
-      align-self: flex-end;
-  }
-  
-  .pricing-card.featured {
-      transform: scale(1);
-  }
-  
-  .pricing-card.featured:hover {
-      transform: translateY(-10px);
-  }
-}
 /* Insights Section Styles */
 .insights-section {
   background-color: var(--dark);
@@ -1159,5 +1117,49 @@ footer {
   .schedule-task {
       padding: 0.5rem;
       font-size: 0.8rem;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-title {
+      font-size: 2.5rem;
+  }
+  
+  .task-input-group {
+      flex-direction: column;
+  }
+  
+  .task-input {
+      border-radius: 10px;
+      margin-bottom: 0.5rem;
+  }
+  
+  .task-btn {
+      border-radius: 10px;
+      padding: 0.75rem;
+      justify-content: center;
+  }
+  
+  .filter-buttons {
+      flex-wrap: wrap;
+  }
+  
+  .task-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+  }
+  
+  .task-actions {
+      align-self: flex-end;
+  }
+  
+  .pricing-card.featured {
+      transform: scale(1);
+  }
+  
+  .pricing-card.featured:hover {
+      transform: translateY(-10px);
   }
 }

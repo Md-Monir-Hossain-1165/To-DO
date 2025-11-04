@@ -11,6 +11,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="features.css">
 </head>
 <body>
     <!-- Navbar -->
@@ -51,465 +52,1085 @@
 
     <!-- Hero Section -->
     <section class="hero-section" id="dashboard">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <h1 class="hero-title">Master Your Productivity</h1>
-                    <p class="hero-subtitle">TaskFlow Pro helps teams and individuals organize tasks, track progress, and achieve goals faster with advanced features and intuitive design.</p>
-                    <div class="d-flex gap-3 flex-wrap">
-                        <button class="btn btn-primary btn-lg">
-                            <i class="fas fa-rocket"></i>
-                            Get Started
-                        </button>
-                        <button class="btn btn-outline-light btn-lg">
-                            <i class="fas fa-play-circle"></i>
-                            Watch Demo
-                        </button>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="task-container mt-5 mt-lg-0">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h3 class="mb-0">Today's Tasks</h3>
-                            <button class="btn btn-sm btn-outline-light" data-bs-toggle="modal" data-bs-target="#taskModal">
-                                <i class="fas fa-plus"></i>
-                                Add Task
-                            </button>
-                        </div>
-                        
-                        <div class="search-box">
-                            <i class="fas fa-search"></i>
-                            <input type="text" class="form-control" id="taskSearch" placeholder="Search tasks...">
-                        </div>
-                        
-                        <div class="completed-percentage">
-                            <span id="completionText">0% completed</span>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar" id="completionProgress" role="progressbar" style="width: 0%"></div>
-                        </div>
-                        
-                        <ul class="task-list" id="taskList">
-                            <!-- Tasks will be added here dynamically -->
-                        </ul>
-                        
-                        <div class="d-flex justify-content-between mt-3">
-                            <span id="taskCount">0 tasks</span>
-                            <button class="btn btn-sm btn-outline-light" id="clearCompleted">Clear Completed</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+      <div class="container">
+          <div class="row align-items-center">
+              <div class="col-lg-6">
+                  <h1 class="hero-title">Master Your Productivity</h1>
+                  <p class="hero-subtitle">TaskFlow Pro helps teams and individuals organize tasks, track progress, and achieve goals faster with advanced features and intuitive design.</p>
+                  <div class="d-flex gap-3 flex-wrap">
+                      <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#taskModal">
+                          <i class="fas fa-rocket"></i>
+                          Get Started
+                      </button>
+                      <button class="btn btn-outline-light btn-lg">
+                          <i class="fas fa-play-circle"></i>
+                          Watch Demo
+                      </button>
+                  </div>
+              </div>
+              <div class="col-lg-6">
+                  <div class="task-container mt-5 mt-lg-0">
+                      <div class="d-flex justify-content-between align-items-center mb-3">
+                          <h3 class="mb-0">Today's Tasks</h3>
+                          <button class="btn btn-sm btn-outline-light" data-bs-toggle="modal" data-bs-target="#taskModal">
+                              <i class="fas fa-plus"></i>
+                              Add Task
+                          </button>
+                      </div>
+                      
+                      <div class="search-box">
+                          <i class="fas fa-search"></i>
+                          <input type="text" class="form-control" id="taskSearch" placeholder="Search tasks...">
+                      </div>
+                      
+                      <div class="completed-percentage">
+                          <span id="completionText">0% completed</span>
+                      </div>
+                      <div class="progress">
+                          <div class="progress-bar" id="completionProgress" role="progressbar" style="width: 0%"></div>
+                      </div>
+                      
+                      <ul class="task-list" id="taskList">
+                          <!-- Tasks will be added here dynamically -->
+                      </ul>
+                      
+                      <div class="d-flex justify-content-between mt-3">
+                          <span id="taskCount">0 tasks</span>
+                          <button class="btn btn-sm btn-outline-light" id="clearCompleted">Clear Completed</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
 
-    <!-- Stats Section -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="section-title">Your Productivity Stats</h2>
-            
-            <div class="stats-container">
-                <div class="stat-item">
-                    <div class="stat-number" id="totalTasks">0</div>
-                    <div class="stat-label">Total Tasks</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" id="completedTasks">0</div>
-                    <div class="stat-label">Completed</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" id="pendingTasks">0</div>
-                    <div class="stat-label">Pending</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" id="overdueTasks">0</div>
-                    <div class="stat-label">Overdue</div>
-                </div>
-            </div>
-            
-            <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">All Tasks</button>
-                <button class="filter-btn" data-filter="active">Active</button>
-                <button class="filter-btn" data-filter="completed">Completed</button>
-                <button class="filter-btn" data-filter="today">Today</button>
-                <button class="filter-btn" data-filter="week">This Week</button>
-            </div>
-        </div>
-    </section>
-    <!-- Productivity Insights Section -->
-<section class="insights-section py-5" id="insights">
-  <div class="container">
-      <h2 class="section-title">Productivity Insights</h2>
-      <p class="text-center text mb-5">Track your progress and optimize your workflow</p>
-      
-      <div class="row g-4">
-          <!-- Task Completion Chart -->
-          <div class="col-lg-6">
-              <div class="insight-card">
-                  <div class="insight-header">
-                      <h4><i class="fas fa-chart-line me-2"></i>Task Completion Trend</h4>
-                      <div class="time-filter">
-                          <button class="filter-btn active" data-period="week">Week</button>
-                          <button class="filter-btn" data-period="month">Month</button>
-                          <button class="filter-btn" data-period="year">Year</button>
-                      </div>
-                  </div>
-                  <div class="chart-container">
-                      <canvas id="completionChart" width="400" height="250"></canvas>
-                  </div>
+  <!-- Stats Section -->
+  <section class="py-5">
+      <div class="container">
+          <h2 class="section-title">Your Productivity Stats</h2>
+          
+          <div class="stats-container">
+              <div class="stat-item">
+                  <div class="stat-number" id="totalTasks">0</div>
+                  <div class="stat-label">Total Tasks</div>
+              </div>
+              <div class="stat-item">
+                  <div class="stat-number" id="completedTasks">0</div>
+                  <div class="stat-label">Completed</div>
+              </div>
+              <div class="stat-item">
+                  <div class="stat-number" id="pendingTasks">0</div>
+                  <div class="stat-label">Pending</div>
+              </div>
+              <div class="stat-item">
+                  <div class="stat-number" id="overdueTasks">0</div>
+                  <div class="stat-label">Overdue</div>
               </div>
           </div>
           
-          <!-- Productivity Stats -->
-          <div class="col-lg-6">
-              <div class="insight-card">
-                  <div class="insight-header">
-                      <h4><i class="fas fa-tachometer-alt me-2"></i>Productivity Metrics</h4>
-                  </div>
-                  <div class="metrics-grid">
-                      <div class="metric-item">
-                          <div class="metric-icon completed">
-                              <i class="fas fa-check-circle"></i>
-                          </div>
-                          <div class="metric-info">
-                              <div class="metric-value" id="avgCompletion">0%</div>
-                              <div class="metric-label">Avg. Completion Rate</div>
-                          </div>
-                      </div>
-                      <div class="metric-item">
-                          <div class="metric-icon pending">
-                              <i class="fas fa-clock"></i>
-                          </div>
-                          <div class="metric-info">
-                              <div class="metric-value" id="avgCompletionTime">0h</div>
-                              <div class="metric-label">Avg. Completion Time</div>
-                          </div>
-                      </div>
-                      <div class="metric-item">
-                          <div class="metric-icon productivity">
-                              <i class="fas fa-bolt"></i>
-                          </div>
-                          <div class="metric-info">
-                              <div class="metric-value" id="productivityScore">0</div>
-                              <div class="metric-label">Productivity Score</div>
+          <div class="filter-buttons">
+              <button class="filter-btn active" data-filter="all">All Tasks</button>
+              <button class="filter-btn" data-filter="active">Active</button>
+              <button class="filter-btn" data-filter="completed">Completed</button>
+              <button class="filter-btn" data-filter="today">Today</button>
+              <button class="filter-btn" data-filter="week">This Week</button>
+          </div>
+      </div>
+  </section>
+
+  <!-- Productivity Insights Section -->
+  <section class="insights-section py-5" id="insights">
+      <div class="container">
+          <h2 class="section-title">Productivity Insights</h2>
+          <p class="text-center text mb-5">Track your progress and optimize your workflow</p>
+          
+          <div class="row g-4">
+              <!-- Task Completion Chart -->
+              <div class="col-lg-6">
+                  <div class="insight-card">
+                      <div class="insight-header">
+                          <h4><i class="fas fa-chart-line me-2"></i>Task Completion Trend</h4>
+                          <div class="time-filter">
+                              <button class="filter-btn active" data-period="week">Week</button>
+                              <button class="filter-btn" data-period="month">Month</button>
+                              <button class="filter-btn" data-period="year">Year</button>
                           </div>
                       </div>
-                      <div class="metric-item">
-                          <div class="metric-icon streak">
-                              <i class="fas fa-fire"></i>
-                          </div>
-                          <div class="metric-info">
-                              <div class="metric-value" id="currentStreak">0</div>
-                              <div class="metric-label">Current Streak</div>
-                          </div>
+                      <div class="chart-container">
+                          <canvas id="completionChart" width="400" height="250"></canvas>
                       </div>
                   </div>
               </div>
-          </div>
-          
-          <!-- Priority Distribution -->
-          <div class="col-lg-6">
-              <div class="insight-card">
-                  <div class="insight-header">
-                      <h4><i class="fas fa-exclamation-circle me-2"></i>Priority Distribution</h4>
-                  </div>
-                  <div class="chart-container">
-                      <canvas id="priorityChart" width="400" height="250"></canvas>
-                  </div>
-              </div>
-          </div>
-          
-          <!-- Category Breakdown -->
-          <div class="col-lg-6">
-              <div class="insight-card">
-                  <div class="insight-header">
-                      <h4><i class="fas fa-layer-group me-2"></i>Category Breakdown</h4>
-                  </div>
-                  <div class="categories-list">
-                      <div class="category-item">
-                          <div class="category-info">
-                              <span class="category-dot work"></span>
-                              <span class="category-name">Work</span>
-                          </div>
-                          <div class="category-stats">
-                              <span class="category-count" id="workCount">0</span>
-                              <span class="category-percent" id="workPercent">0%</span>
-                          </div>
+              
+              <!-- Productivity Stats -->
+              <div class="col-lg-6">
+                  <div class="insight-card">
+                      <div class="insight-header">
+                          <h4><i class="fas fa-tachometer-alt me-2"></i>Productivity Metrics</h4>
                       </div>
-                      <div class="category-item">
-                          <div class="category-info">
-                              <span class="category-dot personal"></span>
-                              <span class="category-name">Personal</span>
+                      <div class="metrics-grid">
+                          <div class="metric-item">
+                              <div class="metric-icon completed">
+                                  <i class="fas fa-check-circle"></i>
+                              </div>
+                              <div class="metric-info">
+                                  <div class="metric-value" id="avgCompletion">0%</div>
+                                  <div class="metric-label">Avg. Completion Rate</div>
+                              </div>
                           </div>
-                          <div class="category-stats">
-                              <span class="category-count" id="personalCount">0</span>
-                              <span class="category-percent" id="personalPercent">0%</span>
+                          <div class="metric-item">
+                              <div class="metric-icon pending">
+                                  <i class="fas fa-clock"></i>
+                              </div>
+                              <div class="metric-info">
+                                  <div class="metric-value" id="avgCompletionTime">0h</div>
+                                  <div class="metric-label">Avg. Completion Time</div>
+                              </div>
                           </div>
-                      </div>
-                      <div class="category-item">
-                          <div class="category-info">
-                              <span class="category-dot shopping"></span>
-                              <span class="category-name">Shopping</span>
+                          <div class="metric-item">
+                              <div class="metric-icon productivity">
+                                  <i class="fas fa-bolt"></i>
+                              </div>
+                              <div class="metric-info">
+                                  <div class="metric-value" id="productivityScore">0</div>
+                                  <div class="metric-label">Productivity Score</div>
+                              </div>
                           </div>
-                          <div class="category-stats">
-                              <span class="category-count" id="shoppingCount">0</span>
-                              <span class="category-percent" id="shoppingPercent">0%</span>
-                          </div>
-                      </div>
-                      <div class="category-item">
-                          <div class="category-info">
-                              <span class="category-dot health"></span>
-                              <span class="category-name">Health</span>
-                          </div>
-                          <div class="category-stats">
-                              <span class="category-count" id="healthCount">0</span>
-                              <span class="category-percent" id="healthPercent">0%</span>
+                          <div class="metric-item">
+                              <div class="metric-icon streak">
+                                  <i class="fas fa-fire"></i>
+                              </div>
+                              <div class="metric-info">
+                                  <div class="metric-value" id="currentStreak">0</div>
+                                  <div class="metric-label">Current Streak</div>
+                              </div>
                           </div>
                       </div>
                   </div>
               </div>
-          </div>
-          
-          <!-- Weekly Schedule -->
-          <div class="col-12">
-              <div class="insight-card">
-                  <div class="insight-header">
-                      <h4><i class="fas fa-calendar-alt me-2"></i>Weekly Task Schedule</h4>
+              
+              <!-- Priority Distribution -->
+              <div class="col-lg-6">
+                  <div class="insight-card">
+                      <div class="insight-header">
+                          <h4><i class="fas fa-exclamation-circle me-2"></i>Priority Distribution</h4>
+                      </div>
+                      <div class="chart-container">
+                          <canvas id="priorityChart" width="400" height="250"></canvas>
+                      </div>
                   </div>
-                  <div class="schedule-container">
-                      <div class="schedule-grid">
-                          <div class="day-column">
-                              <div class="day-header">Mon</div>
-                              <div class="day-tasks" id="mon-tasks"></div>
+              </div>
+              
+              <!-- Category Breakdown -->
+              <div class="col-lg-6">
+                  <div class="insight-card">
+                      <div class="insight-header">
+                          <h4><i class="fas fa-layer-group me-2"></i>Category Breakdown</h4>
+                      </div>
+                      <div class="categories-list">
+                          <div class="category-item">
+                              <div class="category-info">
+                                  <span class="category-dot work"></span>
+                                  <span class="category-name">Work</span>
+                              </div>
+                              <div class="category-stats">
+                                  <span class="category-count" id="workCount">0</span>
+                                  <span class="category-percent" id="workPercent">0%</span>
+                              </div>
                           </div>
-                          <div class="day-column">
-                              <div class="day-header">Tue</div>
-                              <div class="day-tasks" id="tue-tasks"></div>
+                          <div class="category-item">
+                              <div class="category-info">
+                                  <span class="category-dot personal"></span>
+                                  <span class="category-name">Personal</span>
+                              </div>
+                              <div class="category-stats">
+                                  <span class="category-count" id="personalCount">0</span>
+                                  <span class="category-percent" id="personalPercent">0%</span>
+                              </div>
                           </div>
-                          <div class="day-column">
-                              <div class="day-header">Wed</div>
-                              <div class="day-tasks" id="wed-tasks"></div>
+                          <div class="category-item">
+                              <div class="category-info">
+                                  <span class="category-dot shopping"></span>
+                                  <span class="category-name">Shopping</span>
+                              </div>
+                              <div class="category-stats">
+                                  <span class="category-count" id="shoppingCount">0</span>
+                                  <span class="category-percent" id="shoppingPercent">0%</span>
+                              </div>
                           </div>
-                          <div class="day-column">
-                              <div class="day-header">Thu</div>
-                              <div class="day-tasks" id="thu-tasks"></div>
+                          <div class="category-item">
+                              <div class="category-info">
+                                  <span class="category-dot health"></span>
+                                  <span class="category-name">Health</span>
+                              </div>
+                              <div class="category-stats">
+                                  <span class="category-count" id="healthCount">0</span>
+                                  <span class="category-percent" id="healthPercent">0%</span>
+                              </div>
                           </div>
-                          <div class="day-column">
-                              <div class="day-header">Fri</div>
-                              <div class="day-tasks" id="fri-tasks"></div>
-                          </div>
-                          <div class="day-column">
-                              <div class="day-header">Sat</div>
-                              <div class="day-tasks" id="sat-tasks"></div>
-                          </div>
-                          <div class="day-column">
-                              <div class="day-header">Sun</div>
-                              <div class="day-tasks" id="sun-tasks"></div>
+                      </div>
+                  </div>
+              </div>
+              
+              <!-- Weekly Schedule -->
+              <div class="col-12">
+                  <div class="insight-card">
+                      <div class="insight-header">
+                          <h4><i class="fas fa-calendar-alt me-2"></i>Weekly Task Schedule</h4>
+                      </div>
+                      <div class="schedule-container">
+                          <div class="schedule-grid">
+                              <div class="day-column">
+                                  <div class="day-header">Mon</div>
+                                  <div class="day-tasks" id="mon-tasks"></div>
+                              </div>
+                              <div class="day-column">
+                                  <div class="day-header">Tue</div>
+                                  <div class="day-tasks" id="tue-tasks"></div>
+                              </div>
+                              <div class="day-column">
+                                  <div class="day-header">Wed</div>
+                                  <div class="day-tasks" id="wed-tasks"></div>
+                              </div>
+                              <div class="day-column">
+                                  <div class="day-header">Thu</div>
+                                  <div class="day-tasks" id="thu-tasks"></div>
+                              </div>
+                              <div class="day-column">
+                                  <div class="day-header">Fri</div>
+                                  <div class="day-tasks" id="fri-tasks"></div>
+                              </div>
+                              <div class="day-column">
+                                  <div class="day-header">Sat</div>
+                                  <div class="day-tasks" id="sat-tasks"></div>
+                              </div>
+                              <div class="day-column">
+                                  <div class="day-header">Sun</div>
+                                  <div class="day-tasks" id="sun-tasks"></div>
+                              </div>
                           </div>
                       </div>
                   </div>
               </div>
           </div>
       </div>
-  </div>
-</section>
+  </section>
 
-   <!-- Features Section -->
+  <!-- Task Modal -->
+  <div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="taskModalLabel">Add New Task</h5>
+                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <form id="taskForm">
+                      <div class="mb-3">
+                          <label for="taskTitle" class="form-label">Task Title</label>
+                          <input type="text" class="form-control" id="taskTitle" required>
+                      </div>
+                      <div class="mb-3">
+                          <label for="taskDescription" class="form-label">Description</label>
+                          <textarea class="form-control" id="taskDescription" rows="3"></textarea>
+                      </div>
+                      <div class="row">
+                          <div class="col-md-6 mb-3">
+                              <label for="taskPriority" class="form-label">Priority</label>
+                              <select class="form-select" id="taskPriority">
+                                  <option value="low">Low</option>
+                                  <option value="medium">Medium</option>
+                                  <option value="high">High</option>
+                              </select>
+                          </div>
+                          <div class="col-md-6 mb-3">
+                              <label for="taskCategory" class="form-label">Category</label>
+                              <select class="form-select" id="taskCategory">
+                                  <option value="work">Work</option>
+                                  <option value="personal">Personal</option>
+                                  <option value="shopping">Shopping</option>
+                                  <option value="health">Health</option>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-md-6 mb-3">
+                              <label for="taskDueDate" class="form-label">Due Date</label>
+                              <input type="date" class="form-control" id="taskDueDate">
+                          </div>
+                          <div class="col-md-6 mb-3">
+                              <label for="taskDueTime" class="form-label">Due Time</label>
+                              <input type="time" class="form-control" id="taskDueTime">
+                          </div>
+                      </div>
+                  </form>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn btn-primary" id="saveTask">Save Task</button>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<!-- Features Section -->
 <section class="features-section" id="features">
   <div class="container">
+    <div class="section-header text-center mb-5">
       <h2 class="section-title">Advanced Features</h2>
-      
-      <!-- Feature Filter Tabs -->
-      <div class="feature-tabs text-center mb-5">
-          <div class="btn-group" role="group">
-              <button type="button" class="btn btn-outline-primary active" data-category="all">All Features</button>
-              <button type="button" class="btn btn-outline-primary" data-category="organization">Organization</button>
-              <button type="button" class="btn btn-outline-primary" data-category="productivity">Productivity</button>
-              <button type="button" class="btn btn-outline-primary" data-category="collaboration">Collaboration</button>
+      <p class="section-subtitle">Powerful tools to boost your productivity and collaboration</p>
+    </div>
+    
+    <!-- Feature Filter Tabs -->
+    <div class="feature-tabs text-center mb-5">
+      <div class="btn-group" role="group" aria-label="Feature categories">
+        <button type="button" class="btn btn-outline-primary active" data-category="all">All Features</button>
+        <button type="button" class="btn btn-outline-primary" data-category="organization">Organization</button>
+        <button type="button" class="btn btn-outline-primary" data-category="productivity">Productivity</button>
+        <button type="button" class="btn btn-outline-primary" data-category="collaboration">Collaboration</button>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <!-- Project Organization -->
+      <div class="col-md-4" data-categories="organization">
+        <div class="feature-card" onclick="openProjectManager()">
+          <div class="feature-badge">Essential</div>
+          <div class="feature-icon">
+            <i class="fas fa-layer-group"></i>
           </div>
+          <h3 class="feature-title">Project Organization</h3>
+          <p class="feature-description">Group tasks into projects and categories for better organization and focus.</p>
+          <div class="feature-cta">
+            <span>Manage Projects</span>
+            <i class="fas fa-arrow-right"></i>
+          </div>
+        </div>
       </div>
 
-      <div class="row g-4">
-          <!-- Project Organization -->
-          <div class="col-md-4" data-categories="organization">
-              <div class="feature-card" data-bs-toggle="modal" data-bs-target="#projectModal">
-                  <div class="feature-badge">Essential</div>
-                  <div class="feature-icon">
-                      <i class="fas fa-layer-group"></i>
-                  </div>
-                  <h3 class="feature-title">Project Organization</h3>
-                  <p class="feature-description">Group tasks into projects and categories for better organization and focus.</p>
-                  <div class="feature-cta">
-                      <span>See how it works</span>
-                      <i class="fas fa-arrow-right"></i>
-                  </div>
-              </div>
+      <!-- Smart Reminders -->
+      <div class="col-md-4" data-categories="productivity">
+        <div class="feature-card" onclick="configureReminders()">
+          <div class="feature-badge premium">Premium</div>
+          <div class="feature-icon">
+            <i class="fas fa-bell"></i>
           </div>
-
-          <!-- Smart Reminders -->
-          <div class="col-md-4" data-categories="productivity">
-              <div class="feature-card" data-bs-toggle="modal" data-bs-target="#remindersModal">
-                  <div class="feature-badge premium">Premium</div>
-                  <div class="feature-icon">
-                      <i class="fas fa-bell"></i>
-                  </div>
-                  <h3 class="feature-title">Smart Reminders</h3>
-                  <p class="feature-description">Never miss deadlines with intelligent, customizable reminders.</p>
-                  <div class="feature-cta">
-                      <span>See how it works</span>
-                      <i class="fas fa-arrow-right"></i>
-                  </div>
-              </div>
+          <h3 class="feature-title">Smart Reminders</h3>
+          <p class="feature-description">Never miss deadlines with intelligent, customizable reminders.</p>
+          <div class="feature-cta">
+            <span>Set Reminders</span>
+            <i class="fas fa-arrow-right"></i>
           </div>
-
-          <!-- Cross-Platform Sync -->
-          <div class="col-md-4" data-categories="productivity">
-              <div class="feature-card" data-bs-toggle="modal" data-bs-target="#syncModal">
-                  <div class="feature-badge">Essential</div>
-                  <div class="feature-icon">
-                      <i class="fas fa-sync-alt"></i>
-                  </div>
-                  <h3 class="feature-title">Cross-Platform Sync</h3>
-                  <p class="feature-description">Access your tasks from anywhere. Sync across all devices in real-time.</p>
-                  <div class="feature-cta">
-                      <span>See how it works</span>
-                      <i class="fas fa-arrow-right"></i>
-                  </div>
-              </div>
-          </div>
-
-          <!-- Progress Analytics -->
-          <div class="col-md-4" data-categories="productivity">
-              <div class="feature-card" data-bs-toggle="modal" data-bs-target="#analyticsModal">
-                  <div class="feature-badge premium">Premium</div>
-                  <div class="feature-icon">
-                      <i class="fas fa-chart-bar"></i>
-                  </div>
-                  <h3 class="feature-title">Progress Analytics</h3>
-                  <p class="feature-description">Track productivity with detailed analytics and insights to improve workflow.</p>
-                  <div class="feature-cta">
-                      <span>See how it works</span>
-                      <i class="fas fa-arrow-right"></i>
-                  </div>
-              </div>
-          </div>
-
-          <!-- Team Collaboration -->
-          <div class="col-md-4" data-categories="collaboration">
-              <div class="feature-card" data-bs-toggle="modal" data-bs-target="#collaborationModal">
-                  <div class="feature-badge team">Team</div>
-                  <div class="feature-icon">
-                      <i class="fas fa-users"></i>
-                  </div>
-                  <h3 class="feature-title">Team Collaboration</h3>
-                  <p class="feature-description">Assign tasks, share projects, and collaborate with your team in real-time.</p>
-                  <div class="feature-cta">
-                      <span>See how it works</span>
-                      <i class="fas fa-arrow-right"></i>
-                  </div>
-              </div>
-          </div>
-
-          <!-- Advanced Security -->
-          <div class="col-md-4" data-categories="organization">
-              <div class="feature-card" data-bs-toggle="modal" data-bs-target="#securityModal">
-                  <div class="feature-badge premium">Premium</div>
-                  <div class="feature-icon">
-                      <i class="fas fa-shield-alt"></i>
-                  </div>
-                  <h3 class="feature-title">Advanced Security</h3>
-                  <p class="feature-description">Your data is protected with enterprise-grade security and privacy controls.</p>
-                  <div class="feature-cta">
-                      <span>See how it works</span>
-                      <i class="fas fa-arrow-right"></i>
-                  </div>
-              </div>
-          </div>
+        </div>
       </div>
+
+      <!-- Cross-Platform Sync -->
+      <div class="col-md-4" data-categories="productivity">
+        <div class="feature-card" onclick="showSyncStatus()">
+          <div class="feature-badge">Essential</div>
+          <div class="feature-icon">
+            <i class="fas fa-sync-alt"></i>
+          </div>
+          <h3 class="feature-title">Cross-Platform Sync</h3>
+          <p class="feature-description">Access your tasks from anywhere. Sync across all devices in real-time.</p>
+          <div class="feature-cta">
+            <span>Sync Status</span>
+            <i class="fas fa-arrow-right"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Analytics -->
+      <div class="col-md-4" data-categories="productivity">
+        <div class="feature-card" onclick="showAdvancedAnalytics()">
+          <div class="feature-badge premium">Premium</div>
+          <div class="feature-icon">
+            <i class="fas fa-chart-bar"></i>
+          </div>
+          <h3 class="feature-title">Progress Analytics</h3>
+          <p class="feature-description">Track productivity with detailed analytics and insights to improve workflow.</p>
+          <div class="feature-cta">
+            <span>View Analytics</span>
+            <i class="fas fa-arrow-right"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Team Collaboration -->
+      <div class="col-md-4" data-categories="collaboration">
+        <div class="feature-card" onclick="manageTeam()">
+          <div class="feature-badge team">Team</div>
+          <div class="feature-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <h3 class="feature-title">Team Collaboration</h3>
+          <p class="feature-description">Assign tasks, share projects, and collaborate with your team in real-time.</p>
+          <div class="feature-cta">
+            <span>Team Settings</span>
+            <i class="fas fa-arrow-right"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Advanced Security -->
+      <div class="col-md-4" data-categories="organization">
+        <div class="feature-card" onclick="showSecuritySettings()">
+          <div class="feature-badge premium">Premium</div>
+          <div class="feature-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3 class="feature-title">Advanced Security</h3>
+          <p class="feature-description">Your data is protected with enterprise-grade security and privacy controls.</p>
+          <div class="feature-cta">
+            <span>Security</span>
+            <i class="fas fa-arrow-right"></i>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- Feature Detail Modals -->
+<!-- Enhanced Project Management Modal -->
+<div class="modal fade" id="projectManagerModal" tabindex="-1" aria-labelledby="projectManagerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="feature-icon modal-icon">
+          <i class="fas fa-layer-group"></i>
+        </div>
+        <div class="flex-grow-1">
+          <h5 class="modal-title" id="projectManagerModalLabel">Advanced Project Management</h5>
+          <p class="text-muted mb-0">Organize, track, and analyze your projects</p>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Project Creation Section -->
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="feature-card">
+              <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Create New Project</h6>
+              </div>
+              <div class="card-body">
+                <div class="mb-3">
+                  <label class="form-label">Project Name</label>
+                  <input type="text" class="form-control" id="newProjectName" placeholder="Enter project name">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Description</label>
+                  <textarea class="form-control" id="newProjectDescription" placeholder="Project description" rows="2"></textarea>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label class="form-label">Start Date</label>
+                      <input type="date" class="form-control" id="newProjectStartDate">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label class="form-label">End Date</label>
+                      <input type="date" class="form-control" id="newProjectEndDate">
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Project Color</label>
+                  <input type="color" class="form-control form-control-color" id="newProjectColor" value="#7c3aed">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Priority</label>
+                  <select class="form-select" id="newProjectPriority">
+                    <option value="low">Low</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="high">High</option>
+                  </select>
+                </div>
+                <button class="btn btn-primary w-100" onclick="createProject()">
+                  <i class="fas fa-plus"></i> Create Project
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card">
+              <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Projects Overview</h6>
+              </div>
+              <div class="card-body">
+                <div class="projects-stats">
+                  <div class="row text-center">
+                    <div class="col-4">
+                      <div class="stat-number" id="totalProjects">0</div>
+                      <div class="stat-label">Total</div>
+                    </div>
+                    <div class="col-4">
+                      <div class="stat-number" id="activeProjects">0</div>
+                      <div class="stat-label">Active</div>
+                    </div>
+                    <div class="col-4">
+                      <div class="stat-number" id="completedProjects">0</div>
+                      <div class="stat-label">Completed</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="progress-container mt-3">
+                  <div class="d-flex justify-content-between mb-1">
+                    <small>Overall Progress</small>
+                    <small id="overallProgress">0%</small>
+                  </div>
+                  <div class="progress" style="height: 8px;">
+                    <div class="progress-bar" id="overallProgressBar" style="width: 0%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-<!-- Project Organization Modal -->
-<div class="modal fade" id="projectModal" tabindex="-1">
+       <!-- Projects List Section -->
+<div class="feature-card project-list-card" 
+style="border:1px solid #444; border-radius:10px; padding:15px; margin-top:20px;">
+
+<!-- Header -->
+<div class="feature-card-header" 
+  style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #555; padding-bottom:8px; margin-bottom:15px;">
+
+<div class="feature-card-title" style="display:flex; align-items:center; gap:8px;">
+ <i class="fas fa-list" style="color:#0d6efd; font-size:18px;"></i>
+ <h6 style="margin:0; font-size:16px; font-weight:600;">Your Projects</h6>
+</div>
+
+<button class="btn btn-sm btn-outline-primary" 
+       onclick="refreshProjects()" 
+       style="border:1px solid #0d6efd; background:transparent; color:#0d6efd; border-radius:6px; padding:5px 10px; transition:0.3s;">
+ <i class="fas fa-sync-alt"></i>
+</button>
+</div>
+
+<!-- Projects Container -->
+<div id="projectsList" 
+  style="display:flex; flex-direction:column; gap:20px; max-height:500px; overflow-y:auto; padding-right:5px;">
+<!-- Projects will be dynamically inserted here via JS -->
+<hr style="border: none; border-top: 1px solid #555; margin: 10px 0;">
+
+</div>
+</div>
+
+<!-- Optional hover for refresh button -->
+<script>
+const btn = document.querySelector('.btn-outline-primary');
+if (btn) {
+btn.addEventListener('mouseover', () => {
+ btn.style.backgroundColor = '#0d6efd';
+ btn.style.color = '#fff';
+});
+btn.addEventListener('mouseout', () => {
+ btn.style.backgroundColor = 'transparent';
+ btn.style.color = '#0d6efd';
+});
+}
+</script>
+
+
+       
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Smart Reminders Modal -->
+<div class="modal fade" id="remindersModal" tabindex="-1" aria-labelledby="remindersModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="feature-icon modal-icon">
+          <i class="fas fa-bell"></i>
+        </div>
+        <div class="flex-grow-1">
+          <h5 class="modal-title" id="remindersModalLabel">Smart Reminders</h5>
+          <p class="text-muted mb-0">Configure your notification preferences</p>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="feature-card">
+              <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-cog me-2"></i>Reminder Settings</h6>
+              </div>
+              <div class="card-body">
+                <div class="mb-3">
+                  <label class="form-label">Default Reminder Time (minutes)</label>
+                  <input type="number" class="form-control" id="defaultReminderTime" min="5" max="1440" value="30">
+                </div>
+                <div class="form-check mb-3">
+                  <input class="form-check-input" type="checkbox" id="emailReminders" checked>
+                  <label class="form-check-label" for="emailReminders">
+                    Email Reminders
+                  </label>
+                </div>
+                <div class="form-check mb-3">
+                  <input class="form-check-input" type="checkbox" id="pushReminders" checked>
+                  <label class="form-check-label" for="pushReminders">
+                    Push Notifications
+                  </label>
+                </div>
+                <div class="form-check mb-3">
+                  <input class="form-check-input" type="checkbox" id="smartReminders">
+                  <label class="form-check-label" for="smartReminders">
+                    Smart Reminders (AI-based timing)
+                  </label>
+                </div>
+                <button class="btn btn-primary w-100" onclick="saveReminderSettings()">
+                  <i class="fas fa-save"></i> Save Settings
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card">
+              <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-clock me-2"></i>Upcoming Reminders</h6>
+              </div>
+              <div class="card-body">
+                <div id="upcomingReminders">
+                  <!-- Reminders will be populated here -->
+                </div>
+                <div class="text-center mt-3">
+                  <button class="btn btn-outline-primary" onclick="testReminder()">
+                    <i class="fas fa-bell"></i> Test Reminder
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Analytics Modal -->
+<div class="modal fade" id="analyticsModal" tabindex="-1" aria-labelledby="analyticsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="feature-icon modal-icon">
+          <i class="fas fa-chart-bar"></i>
+        </div>
+        <div class="flex-grow-1">
+          <h5 class="modal-title" id="analyticsModalLabel">Progress Analytics</h5>
+          <p class="text-muted mb-0">Track your productivity and performance</p>
+        </div>
+        <div class="btn-group me-2" role="group">
+          <button type="button" class="btn btn-outline-primary btn-sm active" onclick="changeAnalyticsPeriod('week')">Week</button>
+          <button type="button" class="btn btn-outline-primary btn-sm" onclick="changeAnalyticsPeriod('month')">Month</button>
+          <button type="button" class="btn btn-outline-primary btn-sm" onclick="changeAnalyticsPeriod('quarter')">Quarter</button>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-tasks"></i>
+              </div>
+              <div class="stat-number" id="completionRate">0%</div>
+              <div class="stat-label">Completion Rate</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-bolt"></i>
+              </div>
+              <div class="stat-number" id="productivityScore">0</div>
+              <div class="stat-label">Productivity Score</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-fire"></i>
+              </div>
+              <div class="stat-number" id="currentStreak">0</div>
+              <div class="stat-label">Current Streak</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="stat-number" id="avgCompletionTime">0h</div>
+              <div class="stat-label">Avg. Completion Time</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-8">
+            <div class="feature-card">
+              <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-chart-line me-2"></i>Productivity Trends</h6>
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <canvas id="analyticsChart" width="400" height="250"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card">
+              <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-tags me-2"></i>Category Breakdown</h6>
+              </div>
+              <div class="card-body">
+                <div id="categoryBreakdown">
+                  <!-- Category breakdown will be populated here -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Team Collaboration Modal -->
+<div class="modal fade" id="teamModal" tabindex="-1" aria-labelledby="teamModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="feature-icon modal-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="flex-grow-1">
+          <h5 class="modal-title" id="teamModalLabel">Team Collaboration</h5>
+          <p class="text-muted mb-0">Manage your team members and permissions</p>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="feature-card">
+              <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-user-plus me-2"></i>Invite Team Members</h6>
+              </div>
+              <div class="card-body">
+                <div class="mb-3">
+                  <label class="form-label">Email Address</label>
+                  <input type="email" class="form-control" id="inviteEmail" placeholder="Enter email address">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Role</label>
+                  <select class="form-select" id="inviteRole">
+                    <option value="member">Team Member</option>
+                    <option value="manager">Team Manager</option>
+                    <option value="admin">Administrator</option>
+                  </select>
+                </div>
+                <button class="btn btn-primary w-100" onclick="inviteTeamMember()">
+                  <i class="fas fa-paper-plane"></i> Send Invitation
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card">
+              <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-users me-2"></i>Team Members</h6>
+              </div>
+              <div class="card-body">
+                <div class="team-members-list" id="teamMembersList">
+                  <!-- Team members will be populated here -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Project Detail Modal -->
+<div class="modal fade" id="projectDetailModal" tabindex="-1" aria-labelledby="projectDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="feature-icon modal-icon" id="detailProjectIcon">
+          <i class="fas fa-project-diagram"></i>
+        </div>
+        <div class="flex-grow-1">
+          <h5 class="modal-title" id="projectDetailModalLabel" id="detailProjectTitle">Project Details</h5>
+          <p class="text-muted mb-0" id="detailProjectDescription">Project description</p>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="feature-card">
+              <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Project Information</h6>
+              </div>
+              <div class="card-body">
+                <div class="row mb-2">
+                  <div class="col-6">
+                    <small class="text-muted">Start Date</small>
+                    <div id="detailStartDate">-</div>
+                  </div>
+                  <div class="col-6">
+                    <small class="text-muted">End Date</small>
+                    <div id="detailEndDate">-</div>
+                  </div>
+                </div>
+                <div class="row mb-2">
+                  <div class="col-6">
+                    <small class="text-muted">Days Remaining</small>
+                    <div id="detailDaysRemaining">-</div>
+                  </div>
+                  <div class="col-6">
+                    <small class="text-muted">Created</small>
+                    <div id="detailCreatedDate">-</div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <small class="text-muted">Priority</small>
+                    <div><span class="badge" id="detailPriority">-</span></div>
+                  </div>
+                  <div class="col-6">
+                    <small class="text-muted">Status</small>
+                    <div><span class="badge" id="detailStatus">-</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card">
+              <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-chart-line me-2"></i>Progress</h6>
+              </div>
+              <div class="card-body">
+                <div class="text-center mb-3">
+                  <div class="progress-circle" id="detailProgressCircle">
+                    <span id="detailProgressPercent">0%</span>
+                  </div>
+                </div>
+                <div class="row text-center">
+                  <div class="col-6">
+                    <div class="stat-number" id="detailTotalTasks">0</div>
+                    <div class="stat-label">Total Tasks</div>
+                  </div>
+                  <div class="col-6">
+                    <div class="stat-number" id="detailCompletedTasks">0</div>
+                    <div class="stat-label">Completed</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h6 class="mb-0"><i class="fas fa-tasks me-2"></i>Project Tasks</h6>
+            <button class="btn btn-sm btn-primary" onclick="addTaskToProject()">
+              <i class="fas fa-plus"></i> Add Task
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="project-tasks-list" id="projectTasksList">
+              <!-- Project tasks will be populated here -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" onclick="editProject()">
+          <i class="fas fa-edit"></i> Edit Project
+        </button>
+        <button type="button" class="btn btn-outline-warning" onclick="archiveProject()">
+          <i class="fas fa-archive"></i> Archive
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Task Modal -->
+<div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="taskModalLabel">Add New Task</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="taskForm">
+          <div class="mb-3">
+            <label for="taskTitle" class="form-label">Task Title</label>
+            <input type="text" class="form-control" id="taskTitle" required>
+          </div>
+          <div class="mb-3">
+            <label for="taskDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="taskDescription" rows="2"></textarea>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="taskPriority" class="form-label">Priority</label>
+                <select class="form-select" id="taskPriority">
+                  <option value="low">Low</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="taskDueDate" class="form-label">Due Date</label>
+                <input type="date" class="form-control" id="taskDueDate">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="taskCategory" class="form-label">Category</label>
+                <select class="form-select" id="taskCategory">
+                  <option value="work">Work</option>
+                  <option value="personal">Personal</option>
+                  <option value="shopping">Shopping</option>
+                  <option value="health">Health</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="taskProject" class="form-label">Project</label>
+                <select class="form-select" id="taskProject">
+                  <option value="">No Project</option>
+                  <!-- Projects will be populated here -->
+                </select>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="saveTask()">Save Task</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading Spinner -->
+<div id="loadingSpinner" class="d-none">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+
+<!-- Error Container -->
+<div id="errorContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 9999"></div>
+
+<!-- Project Detail Modal -->
+<div class="modal fade" id="projectDetailModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
       <div class="modal-content">
           <div class="modal-header">
-              <div class="feature-icon modal-icon">
+              <div class="feature-icon modal-icon" id="detailProjectIcon">
                   <i class="fas fa-layer-group"></i>
               </div>
               <div class="flex-grow-1">
-                  <h5 class="modal-title">Project Organization</h5>
-                  <p class="text-muted mb-0">Keep your work structured and focused</p>
+                  <h5 class="modal-title" id="detailProjectTitle">Project Details</h5>
+                  <p class="text-muted mb-0" id="detailProjectDescription">Project description</p>
               </div>
               <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
               <div class="row">
-                  <div class="col-md-6">
-                      <h6>Key Benefits:</h6>
-                      <ul class="feature-list">
-                          <li><i class="fas fa-check text-success"></i> Unlimited projects and categories</li>
-                          <li><i class="fas fa-check text-success"></i> Hierarchical task organization</li>
-                          <li><i class="fas fa-check text-success"></i> Color-coded project labels</li>
-                          <li><i class="fas fa-check text-success"></i> Progress tracking per project</li>
-                          <li><i class="fas fa-check text-success"></i> Quick project switching</li>
-                      </ul>
-                  </div>
-                  <div class="col-md-6">
-                      <h6>How it works:</h6>
-                      <p>Create projects to group related tasks together. Set overall project goals and deadlines, then break them down into individual tasks with their own due dates and priorities.</p>
-                      <div class="feature-stats">
-                          <div class="stat-item">
-                              <div class="stat-number">85%</div>
-                              <div class="stat-label">More Organized</div>
+                  <div class="col-md-8">
+                      <div class="project-progress mb-4">
+                          <div class="d-flex justify-content-between align-items-center mb-2">
+                              <h6>Project Progress</h6>
+                              <span class="badge bg-primary" id="detailProgressPercent">0%</span>
                           </div>
-                          <div class="stat-item">
-                              <div class="stat-number">2.3x</div>
-                              <div class="stat-label">Faster Completion</div>
+                          <div class="progress" style="height: 12px;">
+                              <div class="progress-bar" id="detailProgressBar" style="width: 0%"></div>
                           </div>
-                      </div>
-                  </div>
-              </div>
-              <div class="feature-demo mt-4">
-                  <h6>Quick Demo:</h6>
-                  <div class="demo-project-create">
-                      <div class="input-group mb-3">
-                          <input type="text" class="form-control" placeholder="Enter project name..." value="Marketing Campaign">
-                          <button class="btn btn-outline-primary">Create Project</button>
-                      </div>
-                      <div class="demo-preview">
-                          <div class="project-preview">
-                              <div class="project-header">
-                                  <i class="fas fa-folder text-warning"></i>
-                                  <strong>Marketing Campaign</strong>
-                                  <span class="badge bg-primary">3 tasks</span>
+                          <div class="project-timeline mt-3">
+                              <div class="timeline-item">
+                                  <small>Start: <span id="detailStartDate">-</span></small>
                               </div>
-                              <div class="project-tasks">
-                                  <div class="task-preview completed">
-                                      <i class="fas fa-check-circle text-success"></i>
-                                      <span>Design campaign assets</span>
-                                  </div>
-                                  <div class="task-preview">
-                                      <i class="far fa-circle text-muted"></i>
-                                      <span>Schedule social media posts</span>
-                                  </div>
-                                  <div class="task-preview">
-                                      <i class="far fa-circle text-muted"></i>
-                                      <span>Review analytics</span>
-                                  </div>
+                              <div class="timeline-item">
+                                  <small>End: <span id="detailEndDate">-</span></small>
+                              </div>
+                              <div class="timeline-item">
+                                  <small>Days Remaining: <span id="detailDaysRemaining">-</span></small>
                               </div>
                           </div>
                       </div>
+                      
+                      <h6>Project Tasks</h6>
+                      <div class="project-tasks-list" id="projectTasksList">
+                          <!-- Project tasks will be populated -->
+                      </div>
+                  </div>
+                  <div class="col-md-4">
+                      <div class="project-meta">
+                          <div class="meta-item">
+                              <strong>Priority:</strong>
+                              <span class="badge" id="detailPriority">Medium</span>
+                          </div>
+                          <div class="meta-item">
+                              <strong>Status:</strong>
+                              <span class="badge" id="detailStatus">Active</span>
+                          </div>
+                          <div class="meta-item">
+                              <strong>Total Tasks:</strong>
+                              <span id="detailTotalTasks">0</span>
+                          </div>
+                          <div class="meta-item">
+                              <strong>Completed:</strong>
+                              <span id="detailCompletedTasks">0</span>
+                          </div>
+                          <div class="meta-item">
+                              <strong>Created:</strong>
+                              <span id="detailCreatedDate">-</span>
+                          </div>
+                      </div>
+                      
+                      <div class="project-actions mt-4">
+                          <button class="btn btn-outline-primary w-100 mb-2" onclick="editProject()">
+                              <i class="fas fa-edit"></i> Edit Project
+                          </button>
+                          <button class="btn btn-outline-success w-100 mb-2" onclick="addTaskToProject()">
+                              <i class="fas fa-plus"></i> Add Task
+                          </button>
+                          <button class="btn btn-outline-warning w-100 mb-2" onclick="archiveProject()">
+                              <i class="fas fa-archive"></i> Archive
+                          </button>
+                      </div>
                   </div>
               </div>
-          </div>
-          <div class="modal-footer">
-              <button class="btn btn-primary">
-                  <i class="fas fa-rocket"></i>
-                  Try This Feature
-              </button>
           </div>
       </div>
   </div>
@@ -525,208 +1146,126 @@
               </div>
               <div class="flex-grow-1">
                   <h5 class="modal-title">Smart Reminders</h5>
-                  <p class="text-muted mb-0">Never miss important deadlines</p>
+                  <p class="text-muted mb-0">Configure your notification preferences</p>
               </div>
               <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
               <div class="row">
                   <div class="col-md-6">
-                      <h6>Reminder Types:</h6>
-                      <ul class="feature-list">
-                          <li><i class="fas fa-clock text-warning"></i> Due date reminders</li>
-                          <li><i class="fas fa-calendar text-info"></i> Daily summaries</li>
-                          <li><i class="fas fa-exclamation text-danger"></i> Priority alerts</li>
-                          <li><i class="fas fa-sync text-primary"></i> Recurring reminders</li>
-                          <li><i class="fas fa-map-marker-alt text-success"></i> Location-based</li>
-                      </ul>
+                      <h6>Reminder Settings</h6>
+                      <div class="mb-3">
+                          <label class="form-label">Default Reminder Time</label>
+                          <select class="form-select" id="defaultReminderTime">
+                              <option value="15">15 minutes before</option>
+                              <option value="30" selected>30 minutes before</option>
+                              <option value="60">1 hour before</option>
+                              <option value="1440">1 day before</option>
+                          </select>
+                      </div>
+                      <div class="form-check mb-2">
+                          <input class="form-check-input" type="checkbox" id="emailReminders" checked>
+                          <label class="form-check-label" for="emailReminders">Email reminders</label>
+                      </div>
+                      <div class="form-check mb-2">
+                          <input class="form-check-input" type="checkbox" id="pushReminders" checked>
+                          <label class="form-check-label" for="pushReminders">Push notifications</label>
+                      </div>
+                      <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="smartReminders">
+                          <label class="form-check-label" for="smartReminders">Smart reminders (learn from your patterns)</label>
+                      </div>
                   </div>
                   <div class="col-md-6">
-                      <h6>Customization:</h6>
-                      <p>Set custom reminder times, choose notification methods (email, push, in-app), and create smart reminders that learn from your completion patterns.</p>
-                      <div class="feature-stats">
-                          <div class="stat-item">
-                              <div class="stat-number">92%</div>
-                              <div class="stat-label">On-time Completion</div>
-                          </div>
+                      <h6>Upcoming Reminders</h6>
+                      <div class="upcoming-reminders" id="upcomingReminders">
+                          <!-- Reminders will be populated here -->
                       </div>
                   </div>
               </div>
-              <div class="feature-demo mt-4">
-                  <h6>Set a Reminder:</h6>
-                  <div class="reminder-demo">
-                      <div class="reminder-preview active">
-                          <i class="fas fa-bell text-warning"></i>
-                          <div class="reminder-content">
-                              <strong>Team Meeting</strong>
-                              <small>Due today at 2:00 PM</small>
-                          </div>
-                          <span class="reminder-time">15 min before</span>
-                      </div>
-                      <div class="reminder-controls mt-3">
-                          <div class="form-check">
-                              <input class="form-check-input" type="checkbox" checked>
-                              <label class="form-check-label">Notify via email</label>
-                          </div>
-                          <div class="form-check">
-                              <input class="form-check-input" type="checkbox" checked>
-                              <label class="form-check-label">Push notification</label>
-                          </div>
-                      </div>
-                  </div>
+              
+              <div class="mt-4">
+                  <button class="btn btn-outline-primary w-100" onclick="testReminder()">
+                      <i class="fas fa-bell"></i> Test Reminder
+                  </button>
               </div>
           </div>
           <div class="modal-footer">
-              <button class="btn btn-primary">
-                  <i class="fas fa-cog"></i>
-                  Configure Reminders
+              <button class="btn btn-primary" onclick="saveReminderSettings()">
+                  <i class="fas fa-save"></i> Save Settings
               </button>
           </div>
       </div>
   </div>
 </div>
 
-<!-- Cross-Platform Sync Modal -->
-<div class="modal fade" id="syncModal" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-          <div class="modal-header">
-              <div class="feature-icon modal-icon">
-                  <i class="fas fa-sync-alt"></i>
-              </div>
-              <div class="flex-grow-1">
-                  <h5 class="modal-title">Cross-Platform Sync</h5>
-                  <p class="text-muted mb-0">Your tasks everywhere you go</p>
-              </div>
-              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-              <div class="row">
-                  <div class="col-md-6">
-                      <h6>Supported Platforms:</h6>
-                      <ul class="feature-list">
-                          <li><i class="fab fa-chrome text-info"></i> Web Browser</li>
-                          <li><i class="fab fa-apple text-muted"></i> iOS App</li>
-                          <li><i class="fab fa-android text-success"></i> Android App</li>
-                          <li><i class="fab fa-windows text-primary"></i> Desktop App</li>
-                          <li><i class="fas fa-watch text-muted"></i> Smart Watch</li>
-                      </ul>
-                  </div>
-                  <div class="col-md-6">
-                      <h6>Sync Features:</h6>
-                      <p>Real-time synchronization across all your devices. Offline support ensures you can work anywhere, and changes sync when you're back online.</p>
-                      <div class="feature-stats">
-                          <div class="stat-item">
-                              <div class="stat-number">Instant</div>
-                              <div class="stat-label">Sync Speed</div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div class="feature-demo mt-4">
-                  <h6>Device Status:</h6>
-                  <div class="devices-grid">
-                      <div class="device-item online">
-                          <i class="fab fa-chrome fa-2x"></i>
-                          <span>Chrome</span>
-                          <small class="status-online">Online</small>
-                      </div>
-                      <div class="device-item online">
-                          <i class="fab fa-apple fa-2x"></i>
-                          <span>iPhone</span>
-                          <small class="status-online">Online</small>
-                      </div>
-                      <div class="device-item offline">
-                          <i class="fab fa-windows fa-2x"></i>
-                          <span>Desktop</span>
-                          <small class="status-offline">Offline</small>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <div class="modal-footer">
-              <button class="btn btn-primary">
-                  <i class="fas fa-mobile-alt"></i>
-                  Download Apps
-              </button>
-          </div>
-      </div>
-  </div>
-</div>
-
-<!-- Progress Analytics Modal -->
+<!-- Analytics Dashboard Modal -->
 <div class="modal fade" id="analyticsModal" tabindex="-1">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-xl">
       <div class="modal-content">
           <div class="modal-header">
               <div class="feature-icon modal-icon">
                   <i class="fas fa-chart-bar"></i>
               </div>
               <div class="flex-grow-1">
-                  <h5 class="modal-title">Progress Analytics</h5>
-                  <p class="text-muted mb-0">Data-driven productivity insights</p>
+                  <h5 class="modal-title">Productivity Analytics</h5>
+                  <p class="text-muted mb-0">Your performance insights</p>
+              </div>
+              <div class="btn-group">
+                  <button class="btn btn-outline-primary btn-sm" onclick="changeAnalyticsPeriod('week')">Week</button>
+                  <button class="btn btn-outline-primary btn-sm active" onclick="changeAnalyticsPeriod('month')">Month</button>
+                  <button class="btn btn-outline-primary btn-sm" onclick="changeAnalyticsPeriod('year')">Year</button>
               </div>
               <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
+              <div class="row mb-4">
+                  <div class="col-md-3">
+                      <div class="stat-card">
+                          <div class="stat-number" id="completionRate">0%</div>
+                          <div class="stat-label">Completion Rate</div>
+                      </div>
+                  </div>
+                  <div class="col-md-3">
+                      <div class="stat-card">
+                          <div class="stat-number" id="avgCompletionTime">0h</div>
+                          <div class="stat-label">Avg. Time</div>
+                      </div>
+                  </div>
+                  <div class="col-md-3">
+                      <div class="stat-card">
+                          <div class="stat-number" id="productivityScore">0</div>
+                          <div class="stat-label">Productivity Score</div>
+                      </div>
+                  </div>
+                  <div class="col-md-3">
+                      <div class="stat-card">
+                          <div class="stat-number" id="currentStreak">0</div>
+                          <div class="stat-label">Day Streak</div>
+                      </div>
+                  </div>
+              </div>
+              
               <div class="row">
-                  <div class="col-md-6">
-                      <h6>Analytics Features:</h6>
-                      <ul class="feature-list">
-                          <li><i class="fas fa-chart-line text-primary"></i> Completion trends</li>
-                          <li><i class="fas fa-clock text-warning"></i> Time tracking</li>
-                          <li><i class="fas fa-tachometer-alt text-info"></i> Productivity scores</li>
-                          <li><i class="fas fa-calendar text-success"></i> Weekly/monthly reports</li>
-                          <li><i class="fas fa-bullseye text-danger"></i> Goal tracking</li>
-                      </ul>
+                  <div class="col-md-8">
+                      <div class="chart-container">
+                          <canvas id="analyticsChart" width="400" height="200"></canvas>
+                      </div>
                   </div>
-                  <div class="col-md-6">
-                      <h6>Insights Provided:</h6>
-                      <p>Get detailed analytics about your work patterns, identify productivity bottlenecks, and receive personalized recommendations to improve your workflow.</p>
-                      <div class="feature-stats">
-                          <div class="stat-item">
-                              <div class="stat-number">67%</div>
-                              <div class="stat-label">Efficiency Gain</div>
-                          </div>
+                  <div class="col-md-4">
+                      <h6>Top Categories</h6>
+                      <div id="categoryBreakdown">
+                          <!-- Category breakdown will be populated -->
                       </div>
                   </div>
               </div>
-              <div class="feature-demo mt-4">
-                  <h6>Sample Analytics:</h6>
-                  <div class="analytics-preview">
-                      <div class="analytics-row">
-                          <span>Weekly Completion Rate</span>
-                          <div class="progress">
-                              <div class="progress-bar" style="width: 78%">78%</div>
-                          </div>
-                      </div>
-                      <div class="analytics-row">
-                          <span>Average Task Duration</span>
-                          <div class="progress">
-                              <div class="progress-bar bg-warning" style="width: 45%">2.3h</div>
-                          </div>
-                      </div>
-                      <div class="analytics-row">
-                          <span>Productivity Score</span>
-                          <div class="progress">
-                              <div class="progress-bar bg-success" style="width: 85%">85/100</div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <div class="modal-footer">
-              <button class="btn btn-primary">
-                  <i class="fas fa-chart-pie"></i>
-                  View My Analytics
-              </button>
           </div>
       </div>
   </div>
 </div>
 
-<!-- Team Collaboration Modal -->
-<div class="modal fade" id="collaborationModal" tabindex="-1">
+<!-- Team Management Modal -->
+<div class="modal fade" id="teamModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
       <div class="modal-content">
           <div class="modal-header">
@@ -735,481 +1274,47 @@
               </div>
               <div class="flex-grow-1">
                   <h5 class="modal-title">Team Collaboration</h5>
-                  <p class="text-muted mb-0">Work together seamlessly</p>
+                  <p class="text-muted mb-0">Manage your team members</p>
               </div>
               <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
               <div class="row">
                   <div class="col-md-6">
-                      <h6>Collaboration Tools:</h6>
-                      <ul class="feature-list">
-                          <li><i class="fas fa-share-alt text-primary"></i> Task assignment</li>
-                          <li><i class="fas fa-comments text-info"></i> Real-time comments</li>
-                          <li><i class="fas fa-history text-warning"></i> Change history</li>
-                          <li><i class="fas fa-check-double text-success"></i> Approval workflows</li>
-                          <li><i class="fas fa-video text-danger"></i> Integrated meetings</li>
-                      </ul>
+                      <h6>Invite Team Members</h6>
+                      <div class="input-group mb-3">
+                          <input type="email" class="form-control" placeholder="Email address" id="inviteEmail">
+                          <button class="btn btn-primary" onclick="inviteTeamMember()">
+                              <i class="fas fa-paper-plane"></i> Invite
+                          </button>
+                      </div>
                   </div>
                   <div class="col-md-6">
-                      <h6>Team Features:</h6>
-                      <p>Invite team members, assign tasks with deadlines, track everyone's progress, and collaborate in real-time with built-in commenting and file sharing.</p>
-                      <div class="feature-stats">
-                          <div class="stat-item">
-                              <div class="stat-number">3.1x</div>
-                              <div class="stat-label">Faster Projects</div>
-                          </div>
+                      <h6>Team Members</h6>
+                      <div class="team-members-list" id="teamMembersList">
+                          <!-- Team members will be populated -->
                       </div>
                   </div>
               </div>
-              <div class="feature-demo mt-4">
-                  <h6>Team Preview:</h6>
-                  <div class="team-preview">
-                      <div class="team-members">
-                          <div class="member">
-                              <div class="member-avatar">JD</div>
-                              <span>John Doe</span>
-                              <span class="badge bg-primary">3 tasks</span>
-                          </div>
-                          <div class="member">
-                              <div class="member-avatar">SJ</div>
-                              <span>Sarah Johnson</span>
-                              <span class="badge bg-success">5 tasks</span>
-                          </div>
-                          <div class="member">
-                              <div class="member-avatar">MB</div>
-                              <span>Mike Brown</span>
-                              <span class="badge bg-warning">2 tasks</span>
-                          </div>
-                      </div>
+              
+              <div class="mt-4">
+                  <h6>Shared Projects</h6>
+                  <div id="sharedProjects">
+                      <!-- Shared projects will be populated -->
                   </div>
               </div>
-          </div>
-          <div class="modal-footer">
-              <button class="btn btn-primary">
-                  <i class="fas fa-user-plus"></i>
-                  Invite Team Members
-              </button>
           </div>
       </div>
   </div>
 </div>
 
-<!-- Advanced Security Modal -->
-<div class="modal fade" id="securityModal" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-          <div class="modal-header">
-              <div class="feature-icon modal-icon">
-                  <i class="fas fa-shield-alt"></i>
-              </div>
-              <div class="flex-grow-1">
-                  <h5 class="modal-title">Advanced Security</h5>
-                  <p class="text-muted mb-0">Enterprise-grade protection</p>
-              </div>
-              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-              <div class="row">
-                  <div class="col-md-6">
-                      <h6>Security Features:</h6>
-                      <ul class="feature-list">
-                          <li><i class="fas fa-lock text-success"></i> End-to-end encryption</li>
-                          <li><i class="fas fa-fingerprint text-primary"></i> Biometric authentication</li>
-                          <li><i class="fas fa-shield-check text-info"></i> SOC 2 Compliance</li>
-                          <li><i class="fas fa-database text-warning"></i> Daily backups</li>
-                          <li><i class="fas fa-eye-slash text-muted"></i> Zero-knowledge architecture</li>
-                      </ul>
-                  </div>
-                  <div class="col-md-6">
-                      <h6>Data Protection:</h6>
-                      <p>Your data is encrypted both in transit and at rest. We follow industry best practices and undergo regular security audits to ensure your information remains safe.</p>
-                      <div class="feature-stats">
-                          <div class="stat-item">
-                              <div class="stat-number">99.9%</div>
-                              <div class="stat-label">Uptime</div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div class="feature-demo mt-4">
-                  <h6>Security Status:</h6>
-                  <div class="security-status">
-                      <div class="security-item verified">
-                          <i class="fas fa-check-circle text-success"></i>
-                          <span>Encryption Active</span>
-                      </div>
-                      <div class="security-item verified">
-                          <i class="fas fa-check-circle text-success"></i>
-                          <span>Two-Factor Enabled</span>
-                      </div>
-                      <div class="security-item warning">
-                          <i class="fas fa-exclamation-triangle text-warning"></i>
-                          <span>Backup Pending</span>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <div class="modal-footer">
-              <button class="btn btn-primary">
-                  <i class="fas fa-shield-alt"></i>
-                  Security Settings
-              </button>
-          </div>
-      </div>
-  </div>
-</div>
-
-<style>
-/* Enhanced Feature Cards */
-.feature-card {
-  background-color: rgba(15, 23, 42, 0.7);
-  border-radius: 16px;
-  padding: 2.5rem 2rem;
-  height: 100%;
-  transition: all 0.3s;
-  border: 1px solid rgba(100, 116, 139, 0.1);
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.feature-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-  border-color: #7c3aed;
-}
-
-.feature-card:hover .feature-cta {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.feature-badge {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  padding: 0.25rem 0.75rem;
-  border-radius: 15px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  z-index: 2;
-}
-
-.feature-badge:not(.premium):not(.team) {
-  background: rgba(16, 185, 129, 0.2);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.3);
-}
-
-.feature-badge.premium {
-  background: rgba(245, 158, 11, 0.2);
-  color: #f59e0b;
-  border: 1px solid rgba(245, 158, 11, 0.3);
-}
-
-.feature-badge.team {
-  background: rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
-  border: 1px solid rgba(59, 130, 246, 0.3);
-}
-
-.feature-cta {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(transparent, rgba(30, 41, 59, 0.9));
-  padding: 3rem 1.5rem 1.5rem;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  color: #7c3aed;
-  font-weight: 600;
-}
-
-/* Modal Styles */
-.modal-icon {
-  width: 60px;
-  height: 60px;
-  margin-right: 1rem;
-  background: rgba(124, 58, 237, 0.1);
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  color: #7c3aed;
-}
-
-.feature-list {
-  list-style: none;
-  padding: 0;
-}
-
-.feature-list li {
-  padding: 0.5rem 0;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.feature-stats {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.stat-item {
-  text-align: center;
-  padding: 1rem;
-  background: rgba(15, 23, 42, 0.5);
-  border-radius: 10px;
-  border: 1px solid rgba(100, 116, 139, 0.2);
-}
-
-.stat-number {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #7c3aed;
-}
-
-.stat-label {
-  font-size: 0.8rem;
-  color: #64748b;
-}
-
-/* Demo Elements */
-.feature-demo {
-  border-top: 1px solid rgba(100, 116, 139, 0.2);
-  padding-top: 1.5rem;
-}
-
-.demo-project-create {
-  background: rgba(15, 23, 42, 0.5);
-  padding: 1.5rem;
-  border-radius: 10px;
-  border: 1px solid rgba(100, 116, 139, 0.2);
-}
-
-.project-preview {
-  background: rgba(30, 41, 59, 0.7);
-  padding: 1rem;
-  border-radius: 8px;
-  margin-top: 1rem;
-}
-
-.project-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(100, 116, 139, 0.2);
-}
-
-.task-preview {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem 0;
-}
-
-.task-preview.completed {
-  opacity: 0.6;
-}
-
-.reminder-preview {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background: rgba(30, 41, 59, 0.7);
-  border-radius: 10px;
-  border-left: 4px solid #f59e0b;
-}
-
-.reminder-content {
-  flex: 1;
-}
-
-.devices-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-
-.device-item {
-  text-align: center;
-  padding: 1rem;
-  background: rgba(30, 41, 59, 0.7);
-  border-radius: 10px;
-  border: 1px solid rgba(100, 116, 139, 0.2);
-}
-
-.device-item.online {
-  border-color: #10b981;
-}
-
-.device-item.offline {
-  border-color: #64748b;
-}
-
-.status-online {
-  color: #10b981;
-}
-
-.status-offline {
-  color: #64748b;
-}
-
-.analytics-preview {
-  background: rgba(30, 41, 59, 0.7);
-  padding: 1rem;
-  border-radius: 10px;
-}
-
-.analytics-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.analytics-row span {
-  min-width: 150px;
-  font-size: 0.9rem;
-}
-
-.progress {
-  flex: 1;
-  height: 20px;
-  background: rgba(100, 116, 139, 0.2);
-}
-
-.team-members {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.member {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.75rem;
-  background: rgba(30, 41, 59, 0.7);
-  border-radius: 8px;
-}
-
-.member-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #7c3aed;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 600;
-  font-size: 0.8rem;
-}
-
-.security-status {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.security-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  background: rgba(30, 41, 59, 0.7);
-  border-radius: 8px;
-}
-
-.security-item.verified {
-  border-left: 4px solid #10b981;
-}
-
-.security-item.warning {
-  border-left: 4px solid #f59e0b;
-}
-
-/* Feature Tabs */
-.feature-tabs {
-  margin-bottom: 2rem;
-}
-
-.feature-tabs .btn {
-  border-radius: 20px;
-  margin: 0 0.25rem;
-}
-
-/* Filter functionality */
-[data-categories] {
-  transition: all 0.3s ease;
-}
-
-.feature-hidden {
-  opacity: 0.3;
-  transform: scale(0.95);
-  pointer-events: none;
-}
-</style>
-
-<script>
-// Feature filtering functionality
-document.addEventListener('DOMContentLoaded', function() {
-  // Feature filter tabs
-  const filterButtons = document.querySelectorAll('.feature-tabs .btn');
-  const featureCards = document.querySelectorAll('[data-categories]');
-  
-  filterButtons.forEach(button => {
-      button.addEventListener('click', function() {
-          // Update active button
-          filterButtons.forEach(btn => btn.classList.remove('active'));
-          this.classList.add('active');
-          
-          const category = this.dataset.category;
-          filterFeatures(category);
-      });
-  });
-  
-  function filterFeatures(category) {
-      featureCards.forEach(card => {
-          if (category === 'all' || card.dataset.categories.includes(category)) {
-              card.classList.remove('feature-hidden');
-          } else {
-              card.classList.add('feature-hidden');
-          }
-      });
-  }
-  
-  // Add click animations to feature cards
-  featureCards.forEach(card => {
-      card.addEventListener('click', function() {
-          this.style.transform = 'scale(0.98)';
-          setTimeout(() => {
-              this.style.transform = '';
-          }, 150);
-      });
-  });
-});
-</script>
     
 
     <!-- Testimonials Section -->
     <section class="testimonials-section" id="testimonials">
         <div class="container">
             <h2 class="section-title">What Our Users Say</h2>
-            <p class="text-center text-muted mb-5">Join thousands of satisfied users who transformed their productivity</p>
+            <p class="text-center text-white mb-5">Join thousands of satisfied users who transformed their productivity</p>
             
             <div class="row g-4">
                 <div class="col-md-4">
@@ -1262,7 +1367,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <section class="faq-section" id="faq">
         <div class="container">
             <h2 class="section-title">Frequently Asked Questions</h2>
-            <p class="text-center text-muted mb-5">Get answers to the most common questions about TaskFlow Pro</p>
+            <p class="text-center text-white mb-5">Get answers to the most common questions about TaskFlow Pro</p>
             
             <div class="accordion" id="faqAccordion">
                 <div class="accordion-item">
@@ -1333,7 +1438,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <section class="team-section">
   <div class="container">
       <h2 class="section-title">Meet Our Developer</h2>
-      <p class="text-center text-muted mb-5">The passionate creator behind TaskFlow Pro</p>
+      <p class="text-center text-white mb-5">The passionate creator behind TaskFlow Pro</p>
       
       <div class="row justify-content-center">
           <div class="col-md-6 col-lg-4">
@@ -1508,5 +1613,6 @@ document.addEventListener('DOMContentLoaded', function() {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Custom JavaScript -->
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/features.js"></script>
 </body>
 </html>
